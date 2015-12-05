@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  posting_date: 2015-12-04
+  petition_date: 2015-12-04
+  hearing_date: 2015-12-04
+  protest_date: 2015-12-04
+  anc_id: 
+  license_class_id: 
+
+two:
+  posting_date: 2015-12-04
+  petition_date: 2015-12-04
+  hearing_date: 2015-12-04
+  protest_date: 2015-12-04
+  anc_id: 
+  license_class_id: 

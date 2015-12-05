@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Posting date:</strong>
+  <%= @abra_notice.posting_date %>
+</p>
+
+<p>
+  <strong>Petition date:</strong>
+  <%= @abra_notice.petition_date %>
+</p>
+
+<p>
+  <strong>Hearing date:</strong>
+  <%= @abra_notice.hearing_date %>
+</p>
+
+<p>
+  <strong>Protest date:</strong>
+  <%= @abra_notice.protest_date %>
+</p>
+
+<p>
+  <strong>Anc:</strong>
+  <%= @abra_notice.anc %>
+</p>
+
+<p>
+  <strong>License class:</strong>
+  <%= @abra_notice.license_class %>
+</p>
+
+<%= link_to 'Edit', edit_abra_notice_path(@abra_notice) %> |
+<%= link_to 'Back', abra_notices_path %>

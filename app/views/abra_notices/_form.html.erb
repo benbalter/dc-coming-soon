@@ -1,0 +1,41 @@
+<%= form_for(@abra_notice) do |f| %>
+  <% if @abra_notice.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@abra_notice.errors.count, "error") %> prohibited this abra_notice from being saved:</h2>
+
+      <ul>
+      <% @abra_notice.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :posting_date %><br>
+    <%= f.date_select :posting_date %>
+  </div>
+  <div class="field">
+    <%= f.label :petition_date %><br>
+    <%= f.date_select :petition_date %>
+  </div>
+  <div class="field">
+    <%= f.label :hearing_date %><br>
+    <%= f.date_select :hearing_date %>
+  </div>
+  <div class="field">
+    <%= f.label :protest_date %><br>
+    <%= f.date_select :protest_date %>
+  </div>
+  <div class="field">
+    <%= f.label :anc_id %><br>
+    <%= f.text_field :anc_id %>
+  </div>
+  <div class="field">
+    <%= f.label :license_class_id %><br>
+    <%= f.text_field :license_class_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

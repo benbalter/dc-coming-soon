@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Abra Notices</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Posting date</th>
+      <th>Petition date</th>
+      <th>Hearing date</th>
+      <th>Protest date</th>
+      <th>Anc</th>
+      <th>License class</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @abra_notices.each do |abra_notice| %>
+      <tr>
+        <td><%= abra_notice.posting_date %></td>
+        <td><%= abra_notice.petition_date %></td>
+        <td><%= abra_notice.hearing_date %></td>
+        <td><%= abra_notice.protest_date %></td>
+        <td><%= abra_notice.anc %></td>
+        <td><%= abra_notice.license_class %></td>
+        <td><%= link_to 'Show', abra_notice %></td>
+        <td><%= link_to 'Edit', edit_abra_notice_path(abra_notice) %></td>
+        <td><%= link_to 'Destroy', abra_notice, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Abra notice', new_abra_notice_path %>
