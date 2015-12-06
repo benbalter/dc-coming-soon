@@ -6,6 +6,8 @@ class AbraNotice < ActiveRecord::Base
   has_one :ward, :through => :anc
   has_many :details
 
+  acts_as_mappable :through => :licensee
+
   alias_attribute :text, :body
   validates :pdf_page, numericality: { only_integer: true }
 
@@ -36,9 +38,28 @@ class AbraNotice < ActiveRecord::Base
         :trade_name => licensee.trade_name,
         :address    => licensee.address
       },
-      :geometry => licensee.lonlat.as_json
+      :geometry => {
+        :type => "Point",
+        :coordinates => [
+          licensee.lon,
+          licensee.lat
+        ]
+      }
     }
   end
+
+  scope :close_to, -> (latitude, longitude, distance_in_meters = 2000) {
+    where(%{
+      ST_DWithin(
+        ST_GeographyFromText(
+          'SRID=4326;POINT(' || cafes.longitude || ' ' || cafes.latitude || ')'
+        ),
+        ST_GeographyFromText('SRID=4326;POINT(%f %f)'),
+        %d
+      )
+    } % [longitude, latitude, distance_in_meters])
+  }
+
 
   private
 

@@ -31,9 +31,6 @@ GEM
       activemodel (= 4.2.5)
       activesupport (= 4.2.5)
       arel (~> 6.0)
-    activerecord-postgis-adapter (3.1.0)
-      activerecord (>= 4.2.0)
-      rgeo-activerecord (~> 4.0)
     activesupport (4.2.5)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -81,6 +78,10 @@ GEM
     ffi (1.9.10)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
+    geokit (1.10.0)
+    geokit-rails (2.1.0)
+      geokit (~> 1.5)
+      rails (>= 3.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashery (2.1.1)
@@ -212,7 +213,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-postgis-adapter
   bootstrap-sass
   browserify-rails
   byebug
@@ -220,6 +220,7 @@ DEPENDENCIES
   date_validator
   dotenv-rails
   friendly_id
+  geokit-rails
   jbuilder (~> 2.0)
   jquery-rails
   mapbox-sdk
@@ -228,6 +229,7 @@ DEPENDENCIES
   pg
   pry
   rails (= 4.2.5)
+  rgeo-activerecord
   rgeo-geojson
   sass-rails (~> 5.0)
   spring

@@ -6,6 +6,9 @@ class Licensee < ActiveRecord::Base
   validates_uniqueness_of :license_number
   validates_presence_of :name, :trade_name, :address, :lonlat
 
+  acts_as_mappable :lat_column_name => :lat,
+                   :lng_column_name => :lon
+
   CITY = "Washington, DC"
 
   private
@@ -20,11 +23,7 @@ class Licensee < ActiveRecord::Base
     response = Mapbox::Geocoder.geocode_forward address_with_city, options
     return unless response && !response.first["features"].empty?
     feature = response.first["features"].first
-    self.lonlat = factory.point(*feature["center"])
+    self.lon = feature["center"][0]
+    self.lat = feature["center"][1]
   end
-
-  def factory
-    RGeo::Geographic.spherical_factory(srid: 4326)
-  end
-
 end

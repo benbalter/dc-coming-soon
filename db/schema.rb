@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151206184333) do
+ActiveRecord::Schema.define(version: 20151206212247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,15 +85,22 @@ ActiveRecord::Schema.define(version: 20151206184333) do
   add_index "license_classes", ["name"], name: "index_license_classes_on_name", unique: true, using: :btree
 
   create_table "licensees", force: :cascade do |t|
-    t.string    "name"
-    t.string    "trade_name"
-    t.string    "address"
-    t.string    "license_number"
-    t.geography "lonlat",         limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.string  "name"
+    t.string  "trade_name"
+    t.string  "address"
+    t.string  "license_number"
+    t.decimal "lat",            precision: 15, scale: 10
+    t.decimal "lon",            precision: 15, scale: 10
   end
 
   add_index "licensees", ["license_number"], name: "index_licensees_on_license_number", using: :btree
-  add_index "licensees", ["lonlat"], name: "index_licensees_on_lonlat", using: :gist
+
+  create_table "spatial_ref_sys", primary_key: "srid", force: :cascade do |t|
+    t.string  "auth_name", limit: 256
+    t.integer "auth_srid"
+    t.string  "srtext",    limit: 2048
+    t.string  "proj4text", limit: 2048
+  end
 
   create_table "wards", force: :cascade do |t|
   end

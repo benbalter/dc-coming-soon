@@ -52,8 +52,8 @@
   <div class="col-md-6">
     <div id="map"
       data-geojson-url="<%= abra_notice_url(@abra_notice, :format => :geojson) %>"
-      data-lon="<%= @abra_notice.licensee.lonlat.lon %>"
-      data-lat="<%= @abra_notice.licensee.lonlat.lat %>"
+      data-lon="<%= @abra_notice.licensee.lon %>"
+      data-lat="<%= @abra_notice.licensee.lat %>"
     ></div>
   </div>
 </div>
