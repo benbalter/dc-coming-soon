@@ -8,6 +8,7 @@ class AbraBulletin < ActiveRecord::Base
 
   before_validation :ensure_pdf_url
   before_validation :ensure_date
+
   after_save :ensure_notices
 
   has_many :abra_notices
@@ -27,7 +28,7 @@ class AbraBulletin < ActiveRecord::Base
   def pdf
     @pdf ||= PDF::Reader.new open(pdf_url)
   end
-  
+
   private
 
   def ensure_pdf_url

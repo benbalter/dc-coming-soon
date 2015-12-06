@@ -1,10 +1,7 @@
 class AncController < ApplicationController
-  def index
-
-  end
-
   def show
     @anc = Anc.find(params[:id])
-    @abra_notices = @anc.abra_notices
+    @abra_notices = @anc.abra_notices.paginate(:page => params[:page]).
+      order "abra_notices.posting_date desc"
   end
 end

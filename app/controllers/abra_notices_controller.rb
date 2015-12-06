@@ -4,15 +4,21 @@ class AbraNoticesController < ApplicationController
   # GET /abra_notices
   # GET /abra_notices.json
   def index
-    @abra_notices = AbraNotice.all.order "abra_notices.posting_date desc"
+    @abra_notices = AbraNotice.paginate(:page => params[:page]).
+      order "abra_notices.posting_date desc"
   end
 
   # GET /abra_notices/1
   # GET /abra_notices/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.geojson { render json: @abra_notice.to_geojson }
+    end
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_abra_notice
       @abra_notice = AbraNotice.find(params[:id])

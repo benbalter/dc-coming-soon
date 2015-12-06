@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 gem 'rails', '4.2.5'
-gem 'sqlite3'
+gem 'pg'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
@@ -21,6 +21,12 @@ gem 'nokogiri'
 gem 'pdf-reader'
 gem 'friendly_id'
 gem 'bootstrap-sass'
+gem 'activerecord-postgis-adapter'
+gem 'mapbox-sdk'
+gem 'dotenv-rails'
+gem 'browserify-rails'
+gem 'rgeo-geojson'
+gem 'will_paginate'
 
 group :development, :test do
   gem 'byebug'

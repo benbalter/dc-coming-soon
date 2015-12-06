@@ -1,2 +1,3 @@
-<h1>Ward#show</h1>
-<p>Find me in app/views/ward/show.html.erb</p>
+<h2>Ward <%= @ward.id %></h2>
+
+<%= render "abra_notices/table", :locals => { :abra_notices => @abra_notices } %>

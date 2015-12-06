@@ -1,48 +1,71 @@
 <h2><%= @abra_notice.licensee.trade_name %></h2>
 
-<table class="table">
-  <tr>
-    <th>Posting Date</th>
-    <td><%= @abra_notice.posting_date %></td>
-  </tr>
-  <tr>
-    <th>Petition Date</th>
-    <td><%= @abra_notice.petition_date %></td>
-  </tr>
-  <tr>
-    <th>Hearing Date</th>
-    <td><%= @abra_notice.hearing_date %></td>
-  </tr>
-  <tr>
-    <th>Protest Date</th>
-    <td><%= @abra_notice.protest_date %></td>
-  </tr>
-  <tr>
-    <th>Ward</th>
-    <td><%= link_to @abra_notice.ward.id, @abra_notice.ward %></td>
-  </tr>
-  <tr>
-    <th>ANC</th>
-    <td><%= link_to @abra_notice.anc.name, @abra_notice.anc %></td>
-  </tr>
-  <tr>
-    <th>License class</th>
-    <td><%= @abra_notice.license_class.name %></td>
-  </tr>
-  <tr>
-    <th>License Number</th>
-    <td><%= @abra_notice.licensee.license_number %></td>
-  </tr>
-  <tr>
-    <th>Licensee</th>
-    <td><%= @abra_notice.licensee.name %></td>
-  </tr>
-  <tr>
-    <th>Trade Name</th>
-    <td><%= @abra_notice.licensee.trade_name %></td>
-  </tr>
-  <tr>
-    <th>Notice</th>
-    <td><%= link_to "View PDF", @abra_notice.pdf_url %></td>
-  </tr>
-</table>
+<div class="row">
+  <div class="col-md-6">
+    <table class="table">
+      <tr>
+        <th>Posting Date</th>
+        <td><%= @abra_notice.posting_date %></td>
+      </tr>
+      <tr>
+        <th>Petition Date</th>
+        <td><%= @abra_notice.petition_date %></td>
+      </tr>
+      <tr>
+        <th>Hearing Date</th>
+        <td><%= @abra_notice.hearing_date %></td>
+      </tr>
+      <tr>
+        <th>Protest Date</th>
+        <td><%= @abra_notice.protest_date %></td>
+      </tr>
+      <tr>
+        <th>Ward</th>
+        <td><%= link_to @abra_notice.ward.id, @abra_notice.ward %></td>
+      </tr>
+      <tr>
+        <th>ANC</th>
+        <td><%= link_to @abra_notice.anc.name, @abra_notice.anc %></td>
+      </tr>
+      <tr>
+        <th>License class</th>
+        <td><%= @abra_notice.license_class.name %></td>
+      </tr>
+      <tr>
+        <th>License Number</th>
+        <td><%= @abra_notice.licensee.license_number %></td>
+      </tr>
+      <tr>
+        <th>Licensee</th>
+        <td><%= @abra_notice.licensee.name %></td>
+      </tr>
+      <tr>
+        <th>Trade Name</th>
+        <td><%= @abra_notice.licensee.trade_name %></td>
+      </tr>
+      <tr>
+        <th>Notice</th>
+        <td><%= link_to "View PDF", @abra_notice.pdf_url %></td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-6">
+    <div id="map"
+      data-geojson-url="<%= abra_notice_url(@abra_notice, :format => :geojson) %>"
+      data-lon="<%= @abra_notice.licensee.lonlat.lon %>"
+      data-lat="<%= @abra_notice.licensee.lonlat.lat %>"
+    ></div>
+  </div>
+</div>
+
+<h3>Details</h3>
+
+<% @abra_notice.details.each do |detail| %>
+  <h4><%= detail.key %></h4>
+  <p><%= detail.value %></p>
+<% end %>
+
+<h3>Full text</h3>
+<pre>
+  <%= @abra_notice.body %>
+</pre>
