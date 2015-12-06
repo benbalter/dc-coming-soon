@@ -1,0 +1,15 @@
+<form>
+  <input type="text" />
+  <input type="submit" value="Search" />
+</form>
+
+<p>Know your ward or ANC?</p>
+
+<% @wards.each do |ward| %>
+  <h3><%= link_to "Ward #{ward.id}", ward %></h3>
+  <ul>
+    <% ward.ancs.each do |anc| %>
+      <%= link_to anc.name, anc %>
+    <% end %>
+  </ul>
+<% end %>

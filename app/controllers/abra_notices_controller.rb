@@ -4,61 +4,12 @@ class AbraNoticesController < ApplicationController
   # GET /abra_notices
   # GET /abra_notices.json
   def index
-    @abra_notices = AbraNotice.all
+    @abra_notices = AbraNotice.all.order "abra_notices.posting_date desc"
   end
 
   # GET /abra_notices/1
   # GET /abra_notices/1.json
   def show
-  end
-
-  # GET /abra_notices/new
-  def new
-    @abra_notice = AbraNotice.new
-  end
-
-  # GET /abra_notices/1/edit
-  def edit
-  end
-
-  # POST /abra_notices
-  # POST /abra_notices.json
-  def create
-    @abra_notice = AbraNotice.new(abra_notice_params)
-
-    respond_to do |format|
-      if @abra_notice.save
-        format.html { redirect_to @abra_notice, notice: 'Abra notice was successfully created.' }
-        format.json { render :show, status: :created, location: @abra_notice }
-      else
-        format.html { render :new }
-        format.json { render json: @abra_notice.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /abra_notices/1
-  # PATCH/PUT /abra_notices/1.json
-  def update
-    respond_to do |format|
-      if @abra_notice.update(abra_notice_params)
-        format.html { redirect_to @abra_notice, notice: 'Abra notice was successfully updated.' }
-        format.json { render :show, status: :ok, location: @abra_notice }
-      else
-        format.html { render :edit }
-        format.json { render json: @abra_notice.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /abra_notices/1
-  # DELETE /abra_notices/1.json
-  def destroy
-    @abra_notice.destroy
-    respond_to do |format|
-      format.html { redirect_to abra_notices_url, notice: 'Abra notice was successfully destroyed.' }
-      format.json { head :no_content }
-    end
   end
 
   private

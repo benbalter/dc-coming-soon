@@ -1,34 +1,48 @@
-<p id="notice"><%= notice %></p>
+<h2><%= @abra_notice.licensee.trade_name %></h2>
 
-<p>
-  <strong>Posting date:</strong>
-  <%= @abra_notice.posting_date %>
-</p>
-
-<p>
-  <strong>Petition date:</strong>
-  <%= @abra_notice.petition_date %>
-</p>
-
-<p>
-  <strong>Hearing date:</strong>
-  <%= @abra_notice.hearing_date %>
-</p>
-
-<p>
-  <strong>Protest date:</strong>
-  <%= @abra_notice.protest_date %>
-</p>
-
-<p>
-  <strong>Anc:</strong>
-  <%= @abra_notice.anc %>
-</p>
-
-<p>
-  <strong>License class:</strong>
-  <%= @abra_notice.license_class %>
-</p>
-
-<%= link_to 'Edit', edit_abra_notice_path(@abra_notice) %> |
-<%= link_to 'Back', abra_notices_path %>
+<table class="table">
+  <tr>
+    <th>Posting Date</th>
+    <td><%= @abra_notice.posting_date %></td>
+  </tr>
+  <tr>
+    <th>Petition Date</th>
+    <td><%= @abra_notice.petition_date %></td>
+  </tr>
+  <tr>
+    <th>Hearing Date</th>
+    <td><%= @abra_notice.hearing_date %></td>
+  </tr>
+  <tr>
+    <th>Protest Date</th>
+    <td><%= @abra_notice.protest_date %></td>
+  </tr>
+  <tr>
+    <th>Ward</th>
+    <td><%= link_to @abra_notice.ward.id, @abra_notice.ward %></td>
+  </tr>
+  <tr>
+    <th>ANC</th>
+    <td><%= link_to @abra_notice.anc.name, @abra_notice.anc %></td>
+  </tr>
+  <tr>
+    <th>License class</th>
+    <td><%= @abra_notice.license_class.name %></td>
+  </tr>
+  <tr>
+    <th>License Number</th>
+    <td><%= @abra_notice.licensee.license_number %></td>
+  </tr>
+  <tr>
+    <th>Licensee</th>
+    <td><%= @abra_notice.licensee.name %></td>
+  </tr>
+  <tr>
+    <th>Trade Name</th>
+    <td><%= @abra_notice.licensee.trade_name %></td>
+  </tr>
+  <tr>
+    <th>Notice</th>
+    <td><%= link_to "View PDF", @abra_notice.pdf_url %></td>
+  </tr>
+</table>

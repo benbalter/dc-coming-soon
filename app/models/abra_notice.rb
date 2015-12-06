@@ -7,7 +7,6 @@ class AbraNotice < ActiveRecord::Base
 
   validates :pdf_page, numericality: { only_integer: true }
 
-  before_validation :debug
   before_validation :ensure_anc
   before_validation :ensure_license_class
   before_validation :ensure_dates
@@ -19,12 +18,11 @@ class AbraNotice < ActiveRecord::Base
     @text ||= abra_bulletin.pdf.pages[pdf_page - 1].text
   end
 
-  private
-
-  def debug
-    puts text
-    puts key_values.inspect
+  def pdf_url
+    URI.join(abra_bulletin.pdf_url, "#page=#{pdf_page}").to_s
   end
+
+  private
 
   def ensure_anc
     return unless anc.nil?
@@ -62,7 +60,7 @@ class AbraNotice < ActiveRecord::Base
       pairs = text.scan(/^\s*\**([A-Z][^:\n]+):[ \t]*([^\n]+)$/)
       pairs.each do |key, value|
         key = key.strip.downcase.sub /\A\*+/, ""
-        value = value.strip.downcase.sub /\A\*+/, ""
+        value = value.strip.sub /\A\*+/, ""
         key_values[key] = value
       end
       key_values

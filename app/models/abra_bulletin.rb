@@ -27,7 +27,7 @@ class AbraBulletin < ActiveRecord::Base
   def pdf
     @pdf ||= PDF::Reader.new open(pdf_url)
   end
-
+  
   private
 
   def ensure_pdf_url

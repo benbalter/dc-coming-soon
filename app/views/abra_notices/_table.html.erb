@@ -1,0 +1,18 @@
+<table class="table">
+  <tr>
+    <th>Licensee</th>
+    <th>Trade Name</th>
+    <th>Address</th>
+    <th>Ward</th>
+    <th>ANC</th>
+  </tr>
+  <% @abra_notices.each do |notice| %>
+    <tr>
+      <td><%= link_to notice.licensee.name, notice %></td>
+      <td><%= link_to notice.licensee.trade_name, notice %></td>
+      <td><%= link_to notice.licensee.address, notice %></td>
+      <td><%= link_to notice.ward.id, notice.ward %></td>
+      <td><%= link_to notice.anc.name, notice.anc %></td>
+    </tr>
+  <% end %>
+</table>

@@ -19,6 +19,8 @@ gem 'validate_url'
 gem 'typhoeus'
 gem 'nokogiri'
 gem 'pdf-reader'
+gem 'friendly_id'
+gem 'bootstrap-sass'
 
 group :development, :test do
   gem 'byebug'

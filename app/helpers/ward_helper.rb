@@ -1,0 +1,2 @@
+module WardHelper
+end
