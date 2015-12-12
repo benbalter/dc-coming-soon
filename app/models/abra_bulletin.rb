@@ -92,6 +92,9 @@ class AbraBulletin < ActiveRecord::Base
     def get_page(page)
       url = uri_for_page(page)
       response = Typhoeus.get(url)
+      return Nokogiri.HTML(response.body) if response.success?
+
+      response = Typhoeus.get(url)
       Nokogiri.HTML(response.body) if response.success?
     end
 

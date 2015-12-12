@@ -8,7 +8,6 @@ class LicenseClass < ActiveRecord::Base
   private
 
   def ensure_letter
-    puts "NAME: #{name.inspect}"
     self.letter = name.match(REGEX)[2].upcase
   end
 end
