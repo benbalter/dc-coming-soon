@@ -13,6 +13,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 
 gem 'puma'
+gem 'rails_12factor'
 
 gem 'date_validator'
 gem 'validate_url'
