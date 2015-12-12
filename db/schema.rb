@@ -94,13 +94,6 @@ ActiveRecord::Schema.define(version: 20151206212247) do
 
   add_index "licensees", ["license_number"], name: "index_licensees_on_license_number", using: :btree
 
-  create_table "spatial_ref_sys", primary_key: "srid", force: :cascade do |t|
-    t.string  "auth_name", limit: 256
-    t.integer "auth_srid"
-    t.string  "srtext",    limit: 2048
-    t.string  "proj4text", limit: 2048
-  end
-
   create_table "wards", force: :cascade do |t|
   end
 
