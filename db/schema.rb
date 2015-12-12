@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20151206212247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "postgis"
 
   create_table "abra_bulletins", force: :cascade do |t|
     t.string "pdf_url"
