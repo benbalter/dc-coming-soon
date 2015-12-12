@@ -18,7 +18,7 @@ class Licensee < ActiveRecord::Base
   end
 
   def ensure_lonlat
-    return unless lonlat.nil?
+    return unless lon.nil? && lat.nil?
     options = { proximity: Rails.application.config.dc_centerpoint }
     response = Mapbox::Geocoder.geocode_forward address_with_city, options
     return unless response && !response.first["features"].empty?
