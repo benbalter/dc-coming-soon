@@ -4,7 +4,7 @@ class Licensee < ActiveRecord::Base
   before_validation :ensure_lonlat
 
   validates_uniqueness_of :license_number
-  validates_presence_of :name, :trade_name, :address, :lonlat
+  validates_presence_of :name, :trade_name, :address, :lon, :lat
 
   acts_as_mappable :lat_column_name => :lat,
                    :lng_column_name => :lon
