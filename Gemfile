@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby '2.2.3'
 
 gem 'rails', '4.2.5'
 gem 'pg'
@@ -11,8 +12,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
 
-# Use Unicorn as the app server
-gem 'unicorn'
+gem 'puma'
 
 gem 'date_validator'
 gem 'validate_url'
