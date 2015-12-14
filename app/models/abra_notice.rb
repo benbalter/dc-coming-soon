@@ -34,7 +34,7 @@ class AbraNotice < ActiveRecord::Base
     {
       :type => "Feature",
       :properties => {
-        :name       => licensee.name,
+        :name       => licensee.applicant,
         :trade_name => licensee.trade_name,
         :address    => licensee.address
       },
@@ -85,8 +85,12 @@ class AbraNotice < ActiveRecord::Base
 
   def ensure_licensee
     return unless licensee.nil?
+
+    self.licensee = licensee.find_by :license_number => license_number
+    return if self.licensee
+
     licensee = {
-      :name            => key_values["licensee"],
+      :applicant       => key_values["licensee"],
       :trade_name      => key_values["trade name"],
       :address         => key_values["address"],
       :license_number  => license_number
@@ -137,7 +141,7 @@ class AbraNotice < ActiveRecord::Base
   def name
     [
       licensee.trade_name,
-      licensee.name
+      licensee.applicant
     ]
   end
 end

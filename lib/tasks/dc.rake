@@ -5,4 +5,8 @@ namespace :dc do
     ActiveRecord::Base.connection_pool.clear_reloadable_connections!
     AbraBulletin.all_listed
   end
+
+  task licensees: :environment do
+    
+  end
 end

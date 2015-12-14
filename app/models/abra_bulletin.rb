@@ -55,7 +55,7 @@ class AbraBulletin < ActiveRecord::Base
 
   def html
     return @html if defined?(@html)
-    response = Typhoeus.get(html_url)
+    response = Typhoeus.get html_url, Rails.application.config.typhoeus_defaults
     @html = response.body if response.success?
   end
 
@@ -91,10 +91,10 @@ class AbraBulletin < ActiveRecord::Base
 
     def get_page(page)
       url = uri_for_page(page)
-      response = Typhoeus.get(url)
+      response = Typhoeus.get url, Rails.application.config.typhoeus_defaults
       return Nokogiri.HTML(response.body) if response.success?
 
-      response = Typhoeus.get(url)
+      response = Typhoeus.get url, Rails.application.config.typhoeus_defaults
       Nokogiri.HTML(response.body) if response.success?
     end
 

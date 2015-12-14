@@ -11,15 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151206212247) do
+ActiveRecord::Schema.define(version: 20151214162044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "abra_bulletins", force: :cascade do |t|
-    t.string "pdf_url"
+    t.string "pdf_url",  limit: 255
     t.date   "date"
-    t.string "html_url"
+    t.string "html_url", limit: 255
   end
 
   add_index "abra_bulletins", ["date"], name: "index_abra_bulletins_on_date", unique: true, using: :btree
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20151206212247) do
     t.integer "licensee_id"
     t.integer "abra_bulletin_id"
     t.text    "body"
-    t.string  "slug"
+    t.string  "slug",             limit: 255
   end
 
   add_index "abra_notices", ["abra_bulletin_id"], name: "index_abra_notices_on_abra_bulletin_id", using: :btree
@@ -47,7 +47,7 @@ ActiveRecord::Schema.define(version: 20151206212247) do
   add_index "abra_notices", ["slug"], name: "index_abra_notices_on_slug", unique: true, using: :btree
 
   create_table "ancs", force: :cascade do |t|
-    t.string  "name"
+    t.string  "name",    limit: 255
     t.integer "ward_id"
   end
 
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20151206212247) do
   add_index "ancs", ["ward_id"], name: "index_ancs_on_ward_id", using: :btree
 
   create_table "details", force: :cascade do |t|
-    t.string  "key"
+    t.string  "key",            limit: 255
     t.text    "value"
     t.integer "abra_notice_id"
   end
@@ -63,10 +63,10 @@ ActiveRecord::Schema.define(version: 20151206212247) do
   add_index "details", ["abra_notice_id"], name: "index_details_on_abra_notice_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string   "slug",                      null: false
-    t.integer  "sluggable_id",              null: false
+    t.string   "slug",           limit: 255, null: false
+    t.integer  "sluggable_id",               null: false
     t.string   "sluggable_type", limit: 50
-    t.string   "scope"
+    t.string   "scope",          limit: 255
     t.datetime "created_at"
   end
 
@@ -75,24 +75,39 @@ ActiveRecord::Schema.define(version: 20151206212247) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
+  create_table "license_class_license_descriptions", force: :cascade do |t|
+    t.integer "license_class_id"
+    t.integer "license_description_id"
+  end
+
   create_table "license_classes", force: :cascade do |t|
-    t.string "name"
-    t.string "letter"
+    t.string "letter", limit: 255
   end
 
   add_index "license_classes", ["letter"], name: "index_license_classes_on_letter", using: :btree
-  add_index "license_classes", ["name"], name: "index_license_classes_on_name", unique: true, using: :btree
 
-  create_table "licensees", force: :cascade do |t|
-    t.string  "name"
-    t.string  "trade_name"
-    t.string  "address"
-    t.string  "license_number"
-    t.decimal "lat",            precision: 15, scale: 10
-    t.decimal "lon",            precision: 15, scale: 10
+  create_table "license_descriptions", force: :cascade do |t|
+    t.string "description"
   end
 
-  add_index "licensees", ["license_number"], name: "index_licensees_on_license_number", using: :btree
+  add_index "license_descriptions", ["description"], name: "index_license_descriptions_on_description", unique: true, using: :btree
+
+  create_table "licensees", force: :cascade do |t|
+    t.string  "applicant",                            limit: 255
+    t.string  "trade_name",                           limit: 255
+    t.string  "license_number",                       limit: 255
+    t.decimal "lat",                                              precision: 15, scale: 10
+    t.decimal "lon",                                              precision: 15, scale: 10
+    t.integer "license_class_license_description_id"
+    t.integer "street_number"
+    t.string  "street_name",                          limit: 255
+    t.string  "street_type",                          limit: 255
+    t.string  "quad",                                 limit: 255
+    t.string  "status",                               limit: 255
+  end
+
+  add_index "licensees", ["license_class_license_description_id"], name: "index_licensees_on_license_class_license_description_id", using: :btree
+  add_index "licensees", ["license_number"], name: "index_licensees_on_license_number", unique: true, using: :btree
 
   create_table "wards", force: :cascade do |t|
   end
@@ -103,4 +118,5 @@ ActiveRecord::Schema.define(version: 20151206212247) do
   add_foreign_key "abra_notices", "licensees"
   add_foreign_key "ancs", "wards"
   add_foreign_key "details", "abra_notices"
+  add_foreign_key "licensees", "license_classes", column: "license_class_license_description_id"
 end
