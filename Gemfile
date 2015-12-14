@@ -26,7 +26,7 @@ gem 'rgeo-geojson'
 gem 'will_paginate'
 gem 'geokit-rails'
 gem 'tabula-extractor', platform: :jruby, require: "tabula"
-#gem 'dalli'
+gem 'dalli'
 gem 'StreetAddress',  require: "street_address"
 
 group :development do
