@@ -37,10 +37,8 @@ class Licensee < ActiveRecord::Base
   class << self
     def latest_pdf
       # For some reason, the first response almost always returns no information
-      2.times do
-        response = Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
-      end
-
+      response = Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
+      response = Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
       return unless response.success?
 
       document = Nokogiri.HTML response.body
