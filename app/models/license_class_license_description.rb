@@ -5,24 +5,18 @@ class LicenseClassLicenseDescription < ActiveRecord::Base
   validates :license_class_id, :license_description_id, numericality: true
   validates :license_class_id, uniqueness: { scope: :license_description_id }
 
-  REGEX = /([a-z]{3}ss|retailer’s)\s+“?([A-Z]{1,2})”?(\s+|$)/i
+  REGEX = /([a-z]{3}ss|retailer’s)\s+“?([A-Z]{1,2})”?\s+?(.*)$/i
 
-  before_validation :ensure_license_class
-  before_validation :ensure_license_description
+  def self.from_string(string)
+    parts = string.match(REGEX)
+    puts parts.inspect
+    puts string.inspect
+    letter = parts[2].upcase
+    license_class = LicenseClass.find_or_create_by! letter: letter
 
-  private
+    description = parts[3]
+    license_description = LicenseDescription.find_or_create_by! description: description
 
-  def ensure_license_class
-    self.license_class ||= begin
-      letter = description.match(REGEX)[2].upcase
-      LicenseClass.find_or_create_by letter: letter
-    end
-  end
-
-  def ensure_license_description
-    self.license_description ||= begin
-      desc = description.match(REGEX)[3]
-      LicenseDescription.find_or_create_by description: desc
-    end
+    self.find_or_create_by! :license_class => license_class, :license_description => license_description
   end
 end

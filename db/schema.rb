@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151214162044) do
+ActiveRecord::Schema.define(version: 20151214190224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(version: 20151214162044) do
     t.date    "hearing_date"
     t.date    "protest_date"
     t.integer "anc_id"
-    t.integer "license_class_id"
     t.integer "pdf_page"
     t.integer "licensee_id"
     t.integer "abra_bulletin_id"
@@ -42,7 +41,6 @@ ActiveRecord::Schema.define(version: 20151214162044) do
 
   add_index "abra_notices", ["abra_bulletin_id"], name: "index_abra_notices_on_abra_bulletin_id", using: :btree
   add_index "abra_notices", ["anc_id"], name: "index_abra_notices_on_anc_id", using: :btree
-  add_index "abra_notices", ["license_class_id"], name: "index_abra_notices_on_license_class_id", using: :btree
   add_index "abra_notices", ["licensee_id"], name: "index_abra_notices_on_licensee_id", using: :btree
   add_index "abra_notices", ["slug"], name: "index_abra_notices_on_slug", unique: true, using: :btree
 
@@ -80,11 +78,14 @@ ActiveRecord::Schema.define(version: 20151214162044) do
     t.integer "license_description_id"
   end
 
+  add_index "license_class_license_descriptions", ["license_class_id"], name: "index_license_class_license_descriptions_on_license_class_id", using: :btree
+  add_index "license_class_license_descriptions", ["license_description_id"], name: "index_license_class_license_descriptions_on_description_id", using: :btree
+
   create_table "license_classes", force: :cascade do |t|
     t.string "letter", limit: 255
   end
 
-  add_index "license_classes", ["letter"], name: "index_license_classes_on_letter", using: :btree
+  add_index "license_classes", ["letter"], name: "index_license_classes_on_letter", unique: true, using: :btree
 
   create_table "license_descriptions", force: :cascade do |t|
     t.string "description"
@@ -106,17 +107,21 @@ ActiveRecord::Schema.define(version: 20151214162044) do
     t.string  "status",                               limit: 255
   end
 
+  add_index "licensees", ["lat"], name: "index_licensees_on_lat", using: :btree
   add_index "licensees", ["license_class_license_description_id"], name: "index_licensees_on_license_class_license_description_id", using: :btree
   add_index "licensees", ["license_number"], name: "index_licensees_on_license_number", unique: true, using: :btree
+  add_index "licensees", ["lon"], name: "index_licensees_on_lon", using: :btree
+  add_index "licensees", ["status"], name: "index_licensees_on_status", using: :btree
 
   create_table "wards", force: :cascade do |t|
   end
 
   add_foreign_key "abra_notices", "abra_bulletins"
   add_foreign_key "abra_notices", "ancs"
-  add_foreign_key "abra_notices", "license_classes"
   add_foreign_key "abra_notices", "licensees"
   add_foreign_key "ancs", "wards"
   add_foreign_key "details", "abra_notices"
-  add_foreign_key "licensees", "license_classes", column: "license_class_license_description_id"
+  add_foreign_key "license_class_license_descriptions", "license_classes"
+  add_foreign_key "license_class_license_descriptions", "license_descriptions"
+  add_foreign_key "licensees", "license_class_license_descriptions"
 end
