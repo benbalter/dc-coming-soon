@@ -29,7 +29,11 @@
       </tr>
       <tr>
         <th>License class</th>
-        <td><%= @abra_notice.license_class.name %></td>
+        <td><%= @abra_notice.license_class.letter %></td>
+      </tr>
+      <tr>
+        <th>License description</th>
+        <td><%= @abra_notice.license_description.description %></td>
       </tr>
       <tr>
         <th>License Number</th>
@@ -55,6 +59,9 @@
       data-lon="<%= @abra_notice.licensee.lon %>"
       data-lat="<%= @abra_notice.licensee.lat %>"
     ></div>
+    <div class="address">
+      <%= @abra_notice.licensee.address %>
+    </div>
   </div>
 </div>
 

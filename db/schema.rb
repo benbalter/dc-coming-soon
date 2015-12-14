@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151214190224) do
+ActiveRecord::Schema.define(version: 20151214201146) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,11 +37,15 @@ ActiveRecord::Schema.define(version: 20151214190224) do
     t.integer "abra_bulletin_id"
     t.text    "body"
     t.string  "slug",             limit: 255
+    t.boolean "rescinded"
+    t.boolean "correction"
   end
 
   add_index "abra_notices", ["abra_bulletin_id"], name: "index_abra_notices_on_abra_bulletin_id", using: :btree
   add_index "abra_notices", ["anc_id"], name: "index_abra_notices_on_anc_id", using: :btree
+  add_index "abra_notices", ["correction"], name: "index_abra_notices_on_correction", using: :btree
   add_index "abra_notices", ["licensee_id"], name: "index_abra_notices_on_licensee_id", using: :btree
+  add_index "abra_notices", ["rescinded"], name: "index_abra_notices_on_rescinded", using: :btree
   add_index "abra_notices", ["slug"], name: "index_abra_notices_on_slug", unique: true, using: :btree
 
   create_table "ancs", force: :cascade do |t|

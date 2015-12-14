@@ -2,3 +2,4 @@
 
 bundle install
 npm install
+brew bundle

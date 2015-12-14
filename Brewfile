@@ -1,0 +1,2 @@
+brew 'jruby'
+brew 'postgresql'

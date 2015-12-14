@@ -29,13 +29,19 @@ class Licensee < ActiveRecord::Base
   acts_as_mappable :lat_column_name => :lat,
                    :lng_column_name => :lon
 
-  CITY = "Washington, DC"
+  CITY = "WASHINGTON, DC"
   LICENSEE_LIST = "http://abra.dc.gov/page/abc-licensees"
+
+  alias_attribute :name, :applicant
 
   class << self
     def latest_pdf
       response = Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
+
+      # For some reason, the first response almost always returns no information
+      response ||= Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
       return unless response.success?
+      
       document = Nokogiri.HTML response.body
       link = document.css("article a").first.attr("href")
       link = URI.join "http://abra.dc.gov", link if link[0] = "/"
@@ -97,7 +103,7 @@ class Licensee < ActiveRecord::Base
   end
 
   def address
-    [street_number, street_name, street_type, quad, CITY].join(" ")
+    [street_number, street_name, street_type, "#{quad},", CITY].join(" ")
   end
 
   def address=(address)
@@ -105,10 +111,12 @@ class Licensee < ActiveRecord::Base
     address = address.gsub(/([NS])\.([EW])\.?/, '\1\2')   # Normalize N.W. to NW
     address = address.gsub(/, ([NS][EW])/, ' \1')         # Remove comma before quad
     address = address.gsub(/\A(\d+)\s?(-|–)\s?\d+/, '\1') # Flatten ranges
+    address = address.gsub(/\b(ave\w+)\b/i, "AVE")        # Normalize spelling of Avenue
+    address = address.gsub(/,\sspace\s/i, "UNIT")          # Call a unit a unit
     address = "#{address}, #{CITY}"
 
     address = StreetAddress::US.parse address
-    return if address.nil?
+    return unless address
 
     self.street_number = address.number
     self.street_name   = address.street
@@ -129,10 +137,13 @@ class Licensee < ActiveRecord::Base
   end
 
   def normalize_license_number
+    return unless self.license_number
     self.license_number = self.license_number.upcase.sub('‐','-')
   end
 
   def normalize_street_name
+    return unless self.street_name
+
     # If this is a plain numeric street number, e.g., "14", ordinalize it for consistency (e.g., "14th")
     if self.street_name.to_i.to_s == self.street_name
       self.street_name = ActiveSupport::Inflector.ordinalize self.street_name
@@ -145,14 +156,17 @@ class Licensee < ActiveRecord::Base
   # This allows us to store the column as integers, rather than strings, and simplifies geolocation
   # Oh, and did I mention they don't always use a standard hyphen?
   def normalize_street_number
+    return unless self.street_number
     self.street_number = self.street_number.to_s.split(/-|‐/).first.to_i
   end
 
   def normalize_street_type
+    return unless self.street_type
     self.street_type = self.street_type.upcase.sub("STREET", "ST").sub(/\W/, "")
   end
 
   def normalize_quad
+    return unless self.quad
     self.quad = self.quad.upcase.gsub(".","")
   end
 end

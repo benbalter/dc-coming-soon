@@ -47,10 +47,21 @@ class AbraBulletin < ActiveRecord::Base
 
   def ensure_notices
     return unless self.abra_notices.empty?
+    failed = []
+    succeeded = []
     pdf.pages.map do |page|
       next if page.text.to_s.empty?
-      AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
+      begin
+        succeeded.push AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.warn "Couldn't parse page #{page.number} of #{pdf_url}. Got #{e.message}"
+        failed.push({ pdf_url: pdf_url, page: page.number })
+      end
     end
+
+    Rails.logger.info "Found #{succeeded.count} notices."
+    Rails.logger.warn "#{failed.count} notices failed"
+    Rails.logger.warn failed
   end
 
   def html

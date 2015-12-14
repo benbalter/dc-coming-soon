@@ -16,10 +16,15 @@ class AbraNotice < ActiveRecord::Base
   alias_attribute :text, :body
   validates :pdf_page, numericality: { only_integer: true }
 
+  validates_inclusion_of :correction, :in => [true, false]
+  validates_inclusion_of :rescinded, :in => [true, false]
+
   before_validation :ensure_body
   before_validation :ensure_anc
   before_validation :ensure_dates
   before_validation :ensure_licensee
+  before_validation :ensure_correction
+  before_validation :ensure_rescinded
   after_create      :ensure_details
 
   DATE_FIELDS = [:posting, :petition, :hearing, :protest]
@@ -29,6 +34,10 @@ class AbraNotice < ActiveRecord::Base
 
   extend FriendlyId
   friendly_id :name, use: [:slugged, :finders]
+
+  default_scope { where({ rescinded: false }) }
+  scope :rescinded, -> { where({ rescinded: true }) }
+  scope :correction, -> { where({ correction: true }) }
 
   def pdf_url
     URI.join(abra_bulletin.pdf_url, "#page=#{pdf_page}").to_s
@@ -148,5 +157,15 @@ class AbraNotice < ActiveRecord::Base
       licensee.trade_name,
       licensee.applicant
     ]
+  end
+
+  def ensure_correction
+    self.correction = !!(body =~ /CORRECTION/)
+    nil
+  end
+
+  def ensure_rescinded
+    self.rescinded = !!(body =~ /RESCIND/)
+    nil
   end
 end
