@@ -39,9 +39,9 @@ class Licensee < ActiveRecord::Base
       response = Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
 
       # For some reason, the first response almost always returns no information
-      response ||= Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults
+      response = Typhoeus.get LICENSEE_LIST, Rails.application.config.typhoeus_defaults unless response.success?
       return unless response.success?
-      
+
       document = Nokogiri.HTML response.body
       link = document.css("article a").first.attr("href")
       link = URI.join "http://abra.dc.gov", link if link[0] = "/"
