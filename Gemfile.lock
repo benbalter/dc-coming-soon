@@ -8,7 +8,6 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.2)
-    StreetAddress (1.0.6)
     actionmailer (4.2.5)
       actionpack (= 4.2.5)
       actionview (= 4.2.5)
@@ -70,6 +69,10 @@ GEM
     dalli (2.7.4)
     date_validator (0.8.1)
       activemodel
+    dc_address_lookup (0.1.0)
+      addressable
+      nokogiri
+      typhoeus
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.0.2)
@@ -228,12 +231,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  StreetAddress
   bootstrap-sass
   browserify-rails
   coffee-rails (~> 4.1.0)
   dalli
   date_validator
+  dc_address_lookup
   dotenv-rails
   friendly_id
   geokit-rails

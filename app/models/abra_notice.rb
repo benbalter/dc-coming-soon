@@ -5,7 +5,7 @@ class AbraNotice < ActiveRecord::Base
   has_one :license_class, :through => :license_class_license_description
   has_one :license_description, :through => :license_class_license_description
 
-  belongs_to :anc
+  has_one :anc, :through => :licensee
   has_one :ward, :through => :anc
 
   belongs_to :abra_bulletin
@@ -15,14 +15,15 @@ class AbraNotice < ActiveRecord::Base
 
   alias_attribute :text, :body
   validates :pdf_page, numericality: { only_integer: true }
+  validates_presence_of :licensee_id
 
   validates_inclusion_of :correction, :in => [true, false]
   validates_inclusion_of :rescinded, :in => [true, false]
 
   before_validation :ensure_body
-  before_validation :ensure_anc
   before_validation :ensure_dates
   before_validation :ensure_licensee
+  before_validation :ensure_anc
   before_validation :ensure_correction
   before_validation :ensure_rescinded
   after_create      :ensure_details
@@ -92,9 +93,13 @@ class AbraNotice < ActiveRecord::Base
 
   def ensure_licensee
     return unless licensee.nil?
+    Rails.logger.info body
 
-    self.licensee = Licensee.find_by :license_number => license_number
-    return if self.licensee
+    license_number = "ABRA-000001" unless license_number =~ Licensee::LICENSE_NUMBER_REGEX
+    self.licensee = Licensee.find_by_license_number license_number
+    return unless licensee.nil?
+
+    Rails.logger.info "LICENSE NUMBER: #{license_number}"
 
     license_text = key_values["license class"] || key_values["class"]
     license_class_license_description = LicenseClassLicenseDescription.from_string license_text

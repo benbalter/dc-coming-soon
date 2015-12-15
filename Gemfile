@@ -27,7 +27,7 @@ gem 'will_paginate'
 gem 'geokit-rails'
 gem 'tabula-extractor', platform: :jruby, require: "tabula"
 gem 'dalli'
-gem 'StreetAddress',  require: "street_address"
+gem 'dc_address_lookup'
 
 group :development do
   gem 'pry'
