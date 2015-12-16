@@ -1,5 +1,10 @@
 # DC Coming soon
 
+## Requirements
+
+1. JRuby
+2. [Poppler](http://poppler.freedesktop.org/)
+
 ## Huh? Why are you using JRuby?
 
 Because [Tabular Extractor](https://github.com/tabulapdf/tabula-extractor) requires it.
