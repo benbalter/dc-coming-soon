@@ -14,5 +14,5 @@ Rails.logger.info "#{Ward.count} Wards loaded"
 
 Rails.logger.info "Loading ABRA Bulletins..."
 AbraBulletin.all_listed
-Rails.logger.info "#{AbraBuletin.count} ABRA Bulletins loaded"
+Rails.logger.info "#{AbraBulletin.count} ABRA Bulletins loaded"
 Rails.logger.info "#{AbraNotice.count} ABRA Notices loaded"
