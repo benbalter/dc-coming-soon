@@ -1,28 +1,9 @@
-== README
+# DC Coming soon
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Huh? Why are you using JRuby?
 
-Things you may want to cover:
+Because [Tabular Extractor](https://github.com/tabulapdf/tabula-extractor) requires it.
 
-* Ruby version
+## Huh? Why are you using [pdftotext](https://github.com/benbalter/pdftotext) and not something like [PDF Reader](https://github.com/yob/pdf-reader)?
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+PDF Reader doesn't properly handle superscript text, which ABRA often uses in street names (the text bleeds into the line above it).

@@ -26,18 +26,19 @@ class AbraBulletin < ActiveRecord::Base
   }
 
   def pdf
-    @pdf ||= Pdftotext::Document.new pdf_path
+    @pdf ||= Pdftotext::Document.new tempfile.path
   end
 
   private
 
-  def pdf_path
-    pdf = Tempfile.new "abra-bulletin-pdf-#{date}"
+  def tempfile
+    return @tempfile if defined?(@tempfile) && @tempfile && File.exists?(@tempfile.path)
+    @tempfile = Tempfile.new ["abra-bulletin-pdf-#{date}", ".pdf"]
     request = Typhoeus::Request.new pdf_url, Rails.application.config.typhoeus_defaults
-    request.on_body { |chunk| pdf.write(chunk.force_encoding("utf-8")) }
-    request.on_complete { |response| pdf.close }
+    request.on_body { |chunk| @tempfile.write(chunk.force_encoding("utf-8")) }
+    request.on_complete { @tempfile.close }
     request.run
-    pdf.path
+    @tempfile
   end
 
   def ensure_pdf_url
@@ -56,16 +57,10 @@ class AbraBulletin < ActiveRecord::Base
 
   def ensure_notices
     return unless self.abra_notices.empty?
-    failed = []
-    succeeded = []
     pdf.pages.each do |page|
       next if page.text.to_s.empty?
-      succeeded.push AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
+      AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
     end
-
-    Rails.logger.info "Found #{succeeded.count} notices."
-    Rails.logger.warn "#{failed.count} notices failed"
-    Rails.logger.warn failed
   end
 
   def html

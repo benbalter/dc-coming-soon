@@ -141,11 +141,13 @@ class Licensee < ActiveRecord::Base
 
   def address=(address)
     address = address.strip
-    address = address.gsub(/([NS])\.([EW])\.?/, '\1\2')   # Normalize N.W. to NW
-    address = address.gsub(/, ([NS][EW])/, ' \1')         # Remove comma before quad
-    address = address.gsub(/\A(\d+)\s?(-|–)\s?\d+/, '\1') # Flatten ranges
-    address = address.gsub(/\b(ave\w+)\b/i, "AVE")        # Normalize spelling of Avenue
-    address = address.gsub(/,\sspace\s/i, " UNIT ")       # Call a unit a unit
+    address = address.gsub(/([NS])\.([EW])\.?/, '\1\2')            # Normalize N.W. to NW
+    address = address.gsub(/, ([NS][EW])/, ' \1')                  # Remove comma before quad
+    address = address.gsub(/\A(\d+)\s?(-|–|&)\s?\d+/, '\1')        # Flatten ranges
+    address = address.gsub(/\b(ave\w+)\b/i, "AVE")                 # Normalize spelling of Avenue
+    address = address.gsub(/,\sspace\s/i, " UNIT ")                # Call a unit a unit
+    address = address.gsub(/\A(\d+)(-|–)([a-z])\b/i, '\1 UNIT \2') # NNNN-A to NNNN UNIT A
+
     address = "#{address}, #{CITY}"
 
     # We need to use a DC-specific address parser, rather than a generic Ruby one
@@ -206,7 +208,7 @@ class Licensee < ActiveRecord::Base
   # Oh, and did I mention they don't always use a standard hyphen?
   def normalize_street_number
     return unless self.street_number
-    self.street_number = self.street_number.to_s.split(/-|‐/).first.to_i
+    self.street_number = self.street_number.to_s.to_i
   end
 
   def normalize_street_type
