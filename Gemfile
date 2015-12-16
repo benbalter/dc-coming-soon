@@ -15,7 +15,6 @@ gem 'date_validator'
 gem 'validate_url'
 gem 'typhoeus'
 gem 'nokogiri'
-gem 'pdf-reader'
 gem 'friendly_id'
 gem 'bootstrap-sass'
 gem 'rgeo-activerecord'
@@ -28,6 +27,7 @@ gem 'geokit-rails'
 gem 'tabula-extractor', platform: :jruby, require: "tabula"
 gem 'dalli'
 gem 'dc_address_lookup'
+gem 'pdftotext'
 
 group :development do
   gem 'pry'

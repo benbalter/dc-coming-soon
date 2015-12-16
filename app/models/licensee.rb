@@ -1,6 +1,6 @@
 class Licensee < ActiveRecord::Base
-  has_many :abra_notices
-  belongs_to :license_class_license_description
+  has_many :abra_notices, dependent: :destroy
+  belongs_to :license_class_license_description, dependent: :destroy
 
   has_one :license_class, through: :license_class_license_description
   has_one :license_description, through: :license_class_license_description
@@ -36,6 +36,7 @@ class Licensee < ActiveRecord::Base
     alley:     "AL"
   }
   STREET_TYPES_ABV = STREET_TYPES.invert
+  STREET_TYPES_REGEX = /\b(#{STREET_TYPES.keys.join("|")})\b/i
 
   validates :quad, inclusion: { in: QUADS }
   validates :status, inclusion: { in: STATUSES, message: "`%{value}` is not a valid license status." }
@@ -69,14 +70,20 @@ class Licensee < ActiveRecord::Base
     end
 
     def parse_pdf
+      url = latest_pdf
+      Rails.logger.info "Loading licensee PDF from #{url}"
       pdf = Tempfile.new "abra-licensees-pdf"
-      request = Typhoeus::Request.new latest_pdf, Rails.application.config.typhoeus_defaults
+      request = Typhoeus::Request.new url, Rails.application.config.typhoeus_defaults
       request.on_body { |chunk| pdf.write(chunk.force_encoding("utf-8")) }
       request.on_complete { |response| pdf.close }
       request.run
 
       extractor = Tabula::Extraction::ObjectExtractor.new(pdf.path, :all )
-      extractor.extract.each do |pdf_page|
+      pages = extractor.extract
+      pdf.unlink
+
+      Rails.logger.info "Parsing #{pages.count} pages"
+      pages.each do |pdf_page|
         pdf_page.spreadsheets.each do |spreadsheet|
           rows = spreadsheet.to_a.drop(1)
           headings = rows.shift.map { |c| c.sub("\r","") }
@@ -123,6 +130,7 @@ class Licensee < ActiveRecord::Base
 
       licensee.save!
 
+      Rails.logger.info "Added #{licensee.license_number} - #{licensee.trade_name}"
       licensee
     end
   end
@@ -203,7 +211,8 @@ class Licensee < ActiveRecord::Base
 
   def normalize_street_type
     return unless self.street_type
-    self.street_type = self.street_type.upcase.sub("STREET", "ST").sub(/\W/, "")
+    self.street_type = self.street_type.downcase.gsub(STREET_TYPES_REGEX, STREET_TYPES.stringify_keys)
+    self.street_type = self.street_type.upcase.sub(/\W/, "")
   end
 
   def normalize_quad

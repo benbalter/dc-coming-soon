@@ -67,9 +67,9 @@
 
 <h3>Details</h3>
 
-<% @abra_notice.details.each do |detail| %>
-  <h4><%= detail.key %></h4>
-  <p><%= detail.value %></p>
+<% @abra_notice.details.each do |key, value| %>
+  <h4><%= key %></h4>
+  <p><%= value %></p>
 <% end %>
 
 <h3>Full text</h3>

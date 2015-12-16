@@ -1,7 +1,7 @@
 class AbraNotice < ActiveRecord::Base
 
   belongs_to :licensee
-  has_one :license_class_license_description, :through => :licensee
+  has_one :license_class_license_description, :through => :licensee, dependent: :destroy
   has_one :license_class, :through => :license_class_license_description
   has_one :license_description, :through => :license_class_license_description
 
@@ -9,13 +9,13 @@ class AbraNotice < ActiveRecord::Base
   has_one :ward, :through => :anc
 
   belongs_to :abra_bulletin
-  has_many :details
+  serialize  :details, JSON
 
   acts_as_mappable :through => :licensee
 
   alias_attribute :text, :body
   validates :pdf_page, numericality: { only_integer: true }
-  validates_presence_of :licensee_id
+  validates_presence_of :licensee_id, :details
 
   validates_inclusion_of :correction, :in => [true, false]
   validates_inclusion_of :rescinded, :in => [true, false]
@@ -26,11 +26,11 @@ class AbraNotice < ActiveRecord::Base
   before_validation :ensure_anc
   before_validation :ensure_correction
   before_validation :ensure_rescinded
-  after_create      :ensure_details
+  before_validation :ensure_details
 
   DATE_FIELDS = [:posting, :petition, :hearing, :protest]
 
-  DETAILS_REGEX = /^([A-Z]{2}[A-Z\s\/]+)\n(?![A-Za-z]+\s[A-Za-z]+\:\s)(\w.*?)(?=\n\n|\z)/m
+  DETAILS_REGEX = /^\**([A-Z]{2}[A-Z\s\/\(\)]+)\n(?![A-Za-z]+\s[A-Za-z]+\:\s)(\w.*?)(?=\n\n|\z)/m
   KEY_VALUE_REGEX = /^\s*\**([A-Z][^:\n]+):[ \t]*([^\n]+)$/
 
   extend FriendlyId
@@ -93,13 +93,9 @@ class AbraNotice < ActiveRecord::Base
 
   def ensure_licensee
     return unless licensee.nil?
-    Rails.logger.info body
 
-    license_number = "ABRA-000001" unless license_number =~ Licensee::LICENSE_NUMBER_REGEX
     self.licensee = Licensee.find_by_license_number license_number
     return unless licensee.nil?
-
-    Rails.logger.info "LICENSE NUMBER: #{license_number}"
 
     license_text = key_values["license class"] || key_values["class"]
     license_class_license_description = LicenseClassLicenseDescription.from_string license_text
@@ -123,10 +119,7 @@ class AbraNotice < ActiveRecord::Base
   end
 
   def ensure_details
-    return unless details.empty?
-    detail_pairs.each do |key, value|
-      Detail.find_or_create_by! :abra_notice_id => id, :key => key, :value => value
-    end
+    self.details = detail_pairs if details.nil? || details.empty?
   end
 
   def key_values
@@ -154,7 +147,11 @@ class AbraNotice < ActiveRecord::Base
 
   def license_number
     matches = key_values.find { |k,v| k =~ /license\s*no\.?/i }
-    matches[1] if matches
+    if matches && matches[1] =~ Licensee::LICENSE_NUMBER_REGEX
+      matches[1]
+    else
+      "ABRA-999999"
+    end
   end
 
   def name

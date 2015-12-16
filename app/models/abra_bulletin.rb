@@ -11,7 +11,7 @@ class AbraBulletin < ActiveRecord::Base
 
   after_save :ensure_notices
 
-  has_many :abra_notices
+  has_many :abra_notices, dependent: :destroy
   alias_method :notices, :abra_notices
 
   DOMAIN = "http://abra.dc.gov"
@@ -26,10 +26,19 @@ class AbraBulletin < ActiveRecord::Base
   }
 
   def pdf
-    @pdf ||= PDF::Reader.new open(pdf_url)
+    @pdf ||= Pdftotext::Document.new pdf_path
   end
 
   private
+
+  def pdf_path
+    pdf = Tempfile.new "abra-bulletin-pdf-#{date}"
+    request = Typhoeus::Request.new pdf_url, Rails.application.config.typhoeus_defaults
+    request.on_body { |chunk| pdf.write(chunk.force_encoding("utf-8")) }
+    request.on_complete { |response| pdf.close }
+    request.run
+    pdf.path
+  end
 
   def ensure_pdf_url
     return unless self.pdf_url.nil?
@@ -49,14 +58,9 @@ class AbraBulletin < ActiveRecord::Base
     return unless self.abra_notices.empty?
     failed = []
     succeeded = []
-    pdf.pages.map do |page|
+    pdf.pages.each do |page|
       next if page.text.to_s.empty?
-    # begin
-        succeeded.push AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
-      #rescue ActiveRecord::RecordInvalid => e
-    #    Rails.logger.warn "Couldn't parse page #{page.number} of #{pdf_url}. Got #{e.message}"
-    #    failed.push({ pdf_url: pdf_url, page: page.number })
-    #  end
+      succeeded.push AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
     end
 
     Rails.logger.info "Found #{succeeded.count} notices."

@@ -5,3 +5,14 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Rails.logger.info "Loading licensees..."
+Licensee.parse_pdf
+Rails.logger.info "#{Licensee.count} licensees loaded"
+Rails.logger.info "#{Anc.count} ANCs loaded"
+Rails.logger.info "#{Ward.count} Wards loaded"
+
+Rails.logger.info "Loading ABRA Bulletins..."
+AbraBulletin.all_listed
+Rails.logger.info "#{AbraBuletin.count} ABRA Bulletins loaded"
+Rails.logger.info "#{AbraNotice.count} ABRA Notices loaded"

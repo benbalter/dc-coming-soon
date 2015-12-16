@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151215024747) do
+ActiveRecord::Schema.define(version: 20151216171139) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20151215024747) do
     t.string  "slug",             limit: 255
     t.boolean "rescinded"
     t.boolean "correction"
+    t.text    "details"
   end
 
   add_index "abra_notices", ["abra_bulletin_id"], name: "index_abra_notices_on_abra_bulletin_id", using: :btree
@@ -53,14 +54,6 @@ ActiveRecord::Schema.define(version: 20151215024747) do
 
   add_index "ancs", ["name"], name: "index_ancs_on_name", unique: true, using: :btree
   add_index "ancs", ["ward_id"], name: "index_ancs_on_ward_id", using: :btree
-
-  create_table "details", force: :cascade do |t|
-    t.string  "key",            limit: 255
-    t.text    "value"
-    t.integer "abra_notice_id"
-  end
-
-  add_index "details", ["abra_notice_id"], name: "index_details_on_abra_notice_id", using: :btree
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",           limit: 255, null: false
@@ -119,12 +112,11 @@ ActiveRecord::Schema.define(version: 20151215024747) do
   create_table "wards", force: :cascade do |t|
   end
 
-  add_foreign_key "abra_notices", "abra_bulletins"
-  add_foreign_key "abra_notices", "licensees"
-  add_foreign_key "ancs", "wards"
-  add_foreign_key "details", "abra_notices"
-  add_foreign_key "license_class_license_descriptions", "license_classes"
-  add_foreign_key "license_class_license_descriptions", "license_descriptions"
-  add_foreign_key "licensees", "ancs"
-  add_foreign_key "licensees", "license_class_license_descriptions"
+  add_foreign_key "abra_notices", "abra_bulletins", on_delete: :cascade
+  add_foreign_key "abra_notices", "licensees", on_delete: :cascade
+  add_foreign_key "ancs", "wards", on_delete: :cascade
+  add_foreign_key "license_class_license_descriptions", "license_classes", on_delete: :cascade
+  add_foreign_key "license_class_license_descriptions", "license_descriptions", on_delete: :cascade
+  add_foreign_key "licensees", "ancs", on_delete: :cascade
+  add_foreign_key "licensees", "license_class_license_descriptions", on_delete: :cascade
 end
