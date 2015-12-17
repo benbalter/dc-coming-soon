@@ -1,10 +1,10 @@
 source 'http://rubygems.org'
 
 if ENV["JRUBY"] == "1" || ENV["RACK_ENV"] == "production" || ENV["RACK_ENV"] == "test"
-  ruby '2.2.2', engine: 'jruby', engine_version: '9.0.3.0'
+  ruby '2.2.4', engine: 'jruby', engine_version: '9.0.4.0'
   gem 'pg', '0.17.1', :platform => :jruby, :github => 'headius/jruby-pg'
 else
-  ruby '2.2.3'
+  ruby '2.2.4'
   gem 'pg'
 end
 
