@@ -78,6 +78,10 @@ Rails.application.configure do
   }
   config.static_cache_control = "public, max-age=2592000"
 
+  RestClient.enable Rack::Cache,
+    :metastore    => client,
+    :entitystore  => client
+    
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
 
