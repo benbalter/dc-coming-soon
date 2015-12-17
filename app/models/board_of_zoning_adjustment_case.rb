@@ -26,7 +26,11 @@ class BoardOfZoningAdjustmentCase < ZoningCase
       case_number = case_number + 1
       bza_case = BoardOfZoningAdjustmentCase.new number: (case_number)
       if bza_case.exists?
-        bza_case.save!
+        begin
+          bza_case.save!
+        rescue ZoningCase::InvalidCase, ZoningCase::InvalidAddress
+          Rails.logger.error "Failed to load BZA Case #{bza_case.number}"
+        end
         misses = 0
       else
         misses = misses + 1

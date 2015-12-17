@@ -23,6 +23,12 @@ class ZoningCommissionCase < ZoningCase
     end
 
     # Because the site isn't stateless, we must traverse all pages, *and then* load details
-    cases.map { |c| ZoningCommissionCase.find_or_create_by! c }
+    cases.map do |zoning_case|
+      begin
+        ZoningCommissionCase.find_or_create_by! zoning_case
+      rescue ZoningCase::InvalidCase, ZoningCase::InvalidAddress
+        Rails.logger.error "Failed to load ZC Case #{zoning_case[:number]}"
+      end
+    end
   end
 end

@@ -1,6 +1,7 @@
 require "#{Rails.root}/lib/mechanize/page/link"
-
 class ZoningCase < ActiveRecord::Base
+  class InvalidCase < StandardError; end
+  class InvalidAddress < StandardError; end
 
   URL = "https://app.dcoz.dc.gov/Content/Search/Search.aspx"
   TYPES = {
@@ -8,13 +9,16 @@ class ZoningCase < ActiveRecord::Base
     "BZA" => "BoardOfZoningAdjustmentCase"
   }
 
+  acts_as_mappable :lat_column_name => :lat,
+                   :lng_column_name => :lon
+
   belongs_to :anc
   has_one :ward, through: :anc
 
   validates_inclusion_of :type, in: TYPES.values
   validates_uniqueness_of :number
   validates_presence_of :applicant, :address, :number
-  validates_presence_of :status, :relief_type
+  validates_presence_of :status, :relief_type, :location
 
   before_validation :ensure_meta
   before_validation :ensure_address
@@ -24,8 +28,7 @@ class ZoningCase < ActiveRecord::Base
 
   def location
     @location ||= begin
-      address = self.address.split(";").reject { |s| s.empty? }.first
-      DcAddressLookup.lookup(address) unless address.match(/\A\d/).nil?
+      DcAddressLookup.lookup(address_for_geolocation) if address_for_geolocation
     rescue RestClient::InternalServerError
       nil
     end
@@ -35,7 +38,47 @@ class ZoningCase < ActiveRecord::Base
     !!(page_body)
   end
 
+  def to_geojson
+    {
+      :type => "Feature",
+      :properties => {
+        :name       => applicant,
+        :address    => address
+      },
+      :geometry => {
+        :type => "Point",
+        :coordinates => [
+          lon,
+          lat
+        ]
+      }
+    }
+  end
+
   private
+
+  def address_for_geolocation
+    return unless self.address
+    @address_for_geolocation ||= begin
+      Rails.logger.info "STARTING ADDRESS: #{self.address}"
+      address = self.address.strip
+      address = address.split(";").reject { |s| s.empty? }.first
+      address = address.gsub(/\A(\d+)\s?(-|–|&)\s?\d+/, '\1')        # Flatten ranges
+      address = address.gsub(/(\d+), \d+,? and \d+/i, '\1')
+      address = address.split(/\band\b/i).first
+      address = address.gsub(/([NS])\.([EW])\.?/, '\1\2')            # Normalize N.W. to NW
+      address = address.gsub(/, ([NS][EW])/, ' \1')                  # Remove comma before quad
+      address = address.split(/([NS][EW]),/)[0..1].join if address =~ /[NS][EW],/
+      address = address.gsub(/\Arear of /i, '')
+      address = address.gsub(/\A(\d+)[A-Z]/, '\1')
+      address = address.strip.upcase
+      Rails.logger.info "NORMALIZED ADDRESS: #{address}"
+      raise InvalidAddress if address =~ /\bVA\b/
+      raise InvalidAddress unless address =~ /\A\d/
+      Rails.logger.info "ADDRESS FOR GEOLOCATION: #{address}"
+      address
+    end
+  end
 
   def self.agent
     @agent ||= begin
@@ -90,8 +133,10 @@ class ZoningCase < ActiveRecord::Base
 
   def ensure_address
     return unless self.address.nil?
-    address = key_value_pairs["Property Address"].gsub(/\A(\d+)\s?(-|–|&)\s?\d+/, '\1')
+    address = key_value_pairs["Property Address"]
     address = address.split("|").reject { |s| s.empty? }.first
+    address = address.gsub(/\bwashington,? d\.?\.?c\z/i, "")
+    raise InvalidCase if address.empty?
     self.address = address
   end
 
