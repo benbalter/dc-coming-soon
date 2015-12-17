@@ -28,6 +28,7 @@ gem 'dalli'
 gem 'dc_address_lookup'
 gem 'pdftotext'
 gem 'connection_pool'
+gem 'actionpack-action_caching'
 
 group :development do
   gem 'pry'

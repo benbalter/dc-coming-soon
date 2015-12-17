@@ -1,5 +1,6 @@
 class AbraNoticesController < ApplicationController
-  before_action :set_abra_notice, only: [:show, :edit, :update, :destroy]
+  before_action :set_abra_notice, only: [:show]
+  caches_action :show
 
   # GET /abra_notices
   # GET /abra_notices.json
