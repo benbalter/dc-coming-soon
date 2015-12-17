@@ -27,5 +27,6 @@ module DcComingSoon
     config.dc_centerpoint = { :longitude => -77.009289, :latitude => 38.909152 }
 
     config.browserify_rails.commandline_options = "-t coffeeify --extension=\".js.coffee\""
+    config.autoload_paths << Rails.root.join('lib')
   end
 end

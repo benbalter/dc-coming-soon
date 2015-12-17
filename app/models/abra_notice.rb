@@ -29,6 +29,9 @@ class AbraNotice < ActiveRecord::Base
   before_validation :ensure_details
 
   DATE_FIELDS = [:posting, :petition, :hearing, :protest]
+  DATE_FIELDS.each do |field|
+    validates :"#{field}_date", date:true, allow_nil: true
+  end
 
   DETAILS_REGEX = /^\**([A-Z]{2}[A-Z\s\/\(\)]+)\n(?![A-Za-z]+\s[A-Za-z]+\:\s)(\w.*?)(?=\n\n|\z)/m
   KEY_VALUE_REGEX = /^\s*\**([A-Z][^:\n]+):[ \t]*([^\n]+)$/

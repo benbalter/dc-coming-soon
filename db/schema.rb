@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151216171139) do
+ActiveRecord::Schema.define(version: 20151217180532) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -112,6 +112,31 @@ ActiveRecord::Schema.define(version: 20151216171139) do
   create_table "wards", force: :cascade do |t|
   end
 
+  create_table "zoning_cases", force: :cascade do |t|
+    t.string  "type"
+    t.string  "applicant"
+    t.string  "address"
+    t.string  "number"
+    t.string  "status"
+    t.string  "relief_type"
+    t.integer "anc_id"
+    t.text    "description"
+    t.decimal "lat"
+    t.decimal "lon"
+    t.date    "hearing_date"
+  end
+
+  add_index "zoning_cases", ["anc_id"], name: "index_zoning_cases_on_anc_id", using: :btree
+  add_index "zoning_cases", ["hearing_date"], name: "index_zoning_cases_on_hearing_date", using: :btree
+  add_index "zoning_cases", ["lat"], name: "index_zoning_cases_on_lat", using: :btree
+  add_index "zoning_cases", ["lon"], name: "index_zoning_cases_on_lon", using: :btree
+  add_index "zoning_cases", ["number"], name: "index_zoning_cases_on_number", unique: true, using: :btree
+
+  create_table "zoning_commission_cases", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "abra_notices", "abra_bulletins", on_delete: :cascade
   add_foreign_key "abra_notices", "licensees", on_delete: :cascade
   add_foreign_key "ancs", "wards", on_delete: :cascade
@@ -119,4 +144,5 @@ ActiveRecord::Schema.define(version: 20151216171139) do
   add_foreign_key "license_class_license_descriptions", "license_descriptions", on_delete: :cascade
   add_foreign_key "licensees", "ancs", on_delete: :cascade
   add_foreign_key "licensees", "license_class_license_descriptions", on_delete: :cascade
+  add_foreign_key "zoning_cases", "ancs"
 end
