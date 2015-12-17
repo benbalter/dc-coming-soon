@@ -68,10 +68,11 @@ GEM
     dalli (2.7.5)
     date_validator (0.8.1)
       activemodel
-    dc_address_lookup (0.1.0)
-      addressable
-      nokogiri
-      typhoeus
+    dc_address_lookup (0.1.1)
+      nokogiri (~> 1.6)
+      rack-cache (~> 1.5)
+      rest-client (~> 1.8)
+      rest-client-components (~> 1.4)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.0.2)
@@ -108,9 +109,6 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    mapbox-sdk (1.0.0)
-      json (~> 1.8.1)
-      rest-client (~> 1.4)
     method_source (0.8.2)
     mime-types (2.99)
     mini_portile2 (2.0.0)
@@ -134,6 +132,8 @@ GEM
     puma (2.15.3)
     puma (2.15.3-java)
     rack (1.6.4)
+    rack-cache (1.5.1)
+      rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.5)
@@ -170,6 +170,9 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rest-client-components (1.4.0)
+      rack (>= 1.0.1)
+      rest-client (>= 1.6.0)
     rgeo (0.5.2)
     rgeo-activerecord (4.0.0)
       activerecord (~> 4.2)
@@ -234,7 +237,6 @@ DEPENDENCIES
   geokit-rails
   jbuilder (~> 2.0)
   jquery-rails
-  mapbox-sdk
   nokogiri
   pdftotext
   pg (= 0.17.1)!

@@ -5,8 +5,7 @@ class AbraNoticesController < ApplicationController
   # GET /abra_notices.json
   def index
     if params["address"]
-      point = geocode(params["address"])
-      origin = [point["center"][1], point["center"][0]]
+      origin = geocode(params["address"])
       distance = params["distance"] || 0.5
       @abra_notices = AbraNotice.joins(:licensee).
         within(distance, :origin => origin).
@@ -41,9 +40,7 @@ class AbraNoticesController < ApplicationController
 
     def geocode(address)
       address_with_city = "#{address}, Washington, DC"
-      options = { proximity: Rails.application.config.dc_centerpoint }
-      response = Mapbox::Geocoder.geocode_forward address_with_city, options
-      return unless response && !response.first["features"].empty?
-      response.first["features"].first
+      location = DcAddressLookup.lookup address_with_city
+      [location.latitude, location.longitude]
     end
 end
