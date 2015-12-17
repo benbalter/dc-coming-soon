@@ -40,7 +40,6 @@ class ZoningCase < ActiveRecord::Base
   def self.agent
     @agent ||= begin
       mech = Mechanize.new
-      mech.log = Rails.logger
       mech.agent.user_agent = Rails.application.config.user_agent
       mech
     end
