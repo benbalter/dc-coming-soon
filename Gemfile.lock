@@ -68,7 +68,7 @@ GEM
     dalli (2.7.5)
     date_validator (0.8.1)
       activemodel
-    dc_address_lookup (0.1.1)
+    dc_address_lookup (0.1.2)
       nokogiri (~> 1.6)
       rack-cache (~> 1.5)
       rest-client (~> 1.8)
