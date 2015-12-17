@@ -27,6 +27,7 @@ gem 'tabula-extractor', platform: :jruby, require: "tabula"
 gem 'dalli'
 gem 'dc_address_lookup'
 gem 'pdftotext'
+gem 'connection_pool'
 
 group :development do
   gem 'pry'
