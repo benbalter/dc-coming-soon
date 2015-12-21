@@ -15,10 +15,6 @@
         <th>Status</th>
         <td><%= @zoning_case.status %></td>
       </tr>
-      <tr>
-        <th>Relief type</th>
-        <td><%= @zoning_case.relief_type %></td>
-      </tr>
       <% if @zoning_case.anc %>
         <tr>
           <th>ANC</th>
@@ -34,8 +30,8 @@
   <div class="col-md-6">
     <div id="map"
       data-geojson-url="<%= zoning_case_url(@zoning_case, :format => :geojson) %>"
-      data-lon="<%= @zoning_case.lon %>"
-      data-lat="<%= @zoning_case.lat %>"
+      data-lon="<%= @zoning_case.location.lng %>"
+      data-lat="<%= @zoning_case.location.lat %>"
     ></div>
     <div class="address">
       <%= @zoning_case.address %>
@@ -44,4 +40,4 @@
 </div>
 
 <h3>Description</h3>
-<p><%= @zoning_case.description %></p>
+<p><%= @zoning_case.body %></p>

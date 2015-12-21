@@ -5,6 +5,10 @@ class ZoningCommissionCase < ZoningCase
 
   validates_format_of :number, with: CASE_NUMBER_REGEX
 
+  def self.model_name
+    ZoningCase.model_name
+  end
+
   def self.all_listed
     form = ZoningCase.agent.get(URL).form
     form.txtsearch = "#{YEAR}-"
@@ -16,7 +20,7 @@ class ZoningCommissionCase < ZoningCase
       results.each do |result|
         tds = result.search("td")
         next unless tds[1].text.strip =~ CASE_NUMBER_REGEX
-        cases.push({ number: tds[1].text.strip, type: TYPES[tds[2].text.strip.upcase] })
+        cases.push({ number: tds[1].text.strip, type: ABBREVIATIONS_TYPES[tds[2].text.strip.upcase] })
       end
       link = page.link_with(:text => 'Next')
       page = link ? link.asp_click : nil
@@ -26,7 +30,7 @@ class ZoningCommissionCase < ZoningCase
     cases.map do |zoning_case|
       begin
         ZoningCommissionCase.find_or_create_by! zoning_case
-      rescue ZoningCase::InvalidCase, ZoningCase::InvalidAddress
+      rescue ZoningCase::InvalidCase, Location::InvalidAddress
         Rails.logger.error "Failed to load ZC Case #{zoning_case[:number]}"
       end
     end

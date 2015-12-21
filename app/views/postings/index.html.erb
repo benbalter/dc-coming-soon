@@ -1,0 +1,13 @@
+<h2>Here's what's coming within <%= distance_to_human params[:distance] %> of <%= params[:address] %></h2>
+
+<div id="map"
+  data-geojson-url="<%= postings_url(format: :geojson, distance: params[:distance], address: params[:address]) %>"
+  data-lon="<%= @bounding_box.center_x %>"
+  data-lat="<%= @bounding_box.center_y %>"
+  data-max-x="<%= @bounding_box.max_x %>"
+  data-max-y="<%= @bounding_box.max_y %>"
+  data-min-x="<%= @bounding_box.min_x %>"
+  data-min-y="<%= @bounding_box.min_y %>"
+></div>
+
+<%= render "postings/table" %>

@@ -1,0 +1,20 @@
+<table class="table">
+  <tr>
+    <th>Name</th>
+    <th>Address</th>
+    <th>ANC</th>
+    <th>Ward</th>
+    <th>Type<th>
+  </tr>
+  <% @postings.each do |posting| %>
+    <tr>
+      <td><%= link_to posting.name, posting %></td>
+      <td><%= link_to posting.address, posting.location %></td>
+      <td><%= link_to posting.anc.name, posting.anc %></td>
+      <td><%= link_to posting.ward.id, posting.ward %></td>
+      <td><%= Posting::TYPES[posting.type] %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= will_paginate @postings %>

@@ -3,9 +3,15 @@ class BoardOfZoningAdjustmentCase < ZoningCase
   LOWEST_ID = 19140
 
   validates_format_of :number, with: /\d{5}/
-  validates :hearing_date, date: true, allow_nil: true
-
   before_validation :ensure_hearing_date
+
+  def self.to_s
+    "Board of Zoning Adjustment Case"
+  end
+
+  def self.model_name
+    ZoningCase.model_name
+  end
 
   def self.last_known_case_number
     if last_case = BoardOfZoningAdjustmentCase.all.order(:number).last
@@ -28,7 +34,7 @@ class BoardOfZoningAdjustmentCase < ZoningCase
       if bza_case.exists?
         begin
           bza_case.save!
-        rescue ZoningCase::InvalidCase, ZoningCase::InvalidAddress
+        rescue ZoningCase::InvalidCase, Location::InvalidAddress
           Rails.logger.error "Failed to load BZA Case #{bza_case.number}"
         end
         misses = 0

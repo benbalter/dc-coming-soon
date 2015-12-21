@@ -3,7 +3,8 @@ class Anc < ActiveRecord::Base
   before_validation :set_ward_from_name
 
   has_many :licensees
-  has_many :abra_notices, through: :licensees
+  has_many :locations
+  has_many :postings, through: :locations
 
   REGEX = /[1-8][A-G]/
 

@@ -4,48 +4,21 @@ class Licensee < ActiveRecord::Base
 
   has_one :license_class, through: :license_class_license_description
   has_one :license_description, through: :license_class_license_description
+  belongs_to :location
 
-  belongs_to :anc
+  has_one :anc, :through => :location
   has_one :ward, :through => :anc
 
-  before_validation :normalize_street_type
-  before_validation :normalize_street_name
-  before_validation :normalize_street_number
-  before_validation :normalize_quad
-  before_validation :ensure_lonlat
-  before_validation :ensure_anc
-
-  validates_presence_of :applicant, :trade_name, :lon, :lat, :street_name, :anc_id
-  validates_presence_of :street_type, :license_class_license_description_id, :status
+  validates_presence_of :applicant, :trade_name, :location
+  validates_presence_of  :license_class_license_description_id, :status
   validates_numericality_of :license_id, only_integer: true
-  validates_numericality_of :street_number, only_integer: true,  message: "`%{value}` is not a valid street number."
   validates_uniqueness_of :license_id
 
-  STATUSES         = ["Active", "Safekeeping", "405.1 New Const", "Pending"]
-  QUADS            = %w[NW NE SW SE]
-  STREET_TYPES     = {
-    street:    "ST",
-    avenue:    "AVE",
-    boulevard: "BLVD",
-    road:      "RD",
-    place:     "PL",
-    drive:     "DR",
-    circle:    "CIR",
-    plaza:     "PLZ",
-    court:     "CT",
-    alley:     "AL"
-  }
-  STREET_TYPES_ABV = STREET_TYPES.invert
-  STREET_TYPES_REGEX = /\b(#{STREET_TYPES.keys.join("|")})\b/i
-
-  validates :quad, inclusion: { in: QUADS }
+  STATUSES = ["Active", "Safekeeping", "405.1 New Const", "Pending"]
   validates :status, inclusion: { in: STATUSES, message: "`%{value}` is not a valid license status." }
-  validates :street_type, inclusion: { in: STREET_TYPES_ABV.keys, message: "`%{value}` is not a known street type." }
 
-  acts_as_mappable :lat_column_name => :lat,
-                   :lng_column_name => :lon
+  acts_as_mappable through: :location
 
-  CITY = "WASHINGTON, DC"
   LICENSEE_LIST = "http://abra.dc.gov/page/abc-licensees"
   LICENSE_NUMBER_REGEX = /ABRA[‐-]\s?(\d{6})/i
 
@@ -116,16 +89,20 @@ class Licensee < ActiveRecord::Base
         })
       })
 
-      licensee = Licensee.new({
-        :applicant                         => attributes[:applicant],
-        :trade_name                        => attributes[:trade_name],
+      location = Location.find_or_create_by!({
         :street_number                     => attributes[:street_number],
         :street_name                       => attributes[:street_name],
         :street_type                       => attributes[:type],
-        :quad                              => attributes[:quad],
+        :quad                              => attributes[:quad]
+      })
+
+      licensee = Licensee.new({
+        :applicant                         => attributes[:applicant],
+        :trade_name                        => attributes[:trade_name],
         :license_number                    => attributes[:license],
         :status                            => attributes[:status],
-        :license_class_license_description => license_class_license_description
+        :license_class_license_description => license_class_license_description,
+        :location                          => location
       })
 
       licensee.save!
@@ -136,33 +113,7 @@ class Licensee < ActiveRecord::Base
   end
 
   def address
-    [street_number, street_name, street_type, "#{quad},", CITY].join(" ")
-  end
-
-  def address=(address)
-    address = address.strip
-    address = address.gsub(/([NS])\.([EW])\.?/, '\1\2')            # Normalize N.W. to NW
-    address = address.gsub(/, ([NS][EW])/, ' \1')                  # Remove comma before quad
-    address = address.gsub(/\A(\d+)\s?(-|–|&)\s?\d+/, '\1')        # Flatten ranges
-    address = address.gsub(/\b(ave\w+)\b/i, "AVE")                 # Normalize spelling of Avenue
-    address = address.gsub(/,\sspace\s/i, " UNIT ")                # Call a unit a unit
-    address = address.gsub(/\A(\d+)(-|–)([a-z])\b/i, '\1 UNIT \2') # NNNN-A to NNNN UNIT A
-
-    address = "#{address}, #{CITY}"
-
-    # We need to use a DC-specific address parser, rather than a generic Ruby one
-    # Because most non-DC-Specific parsers err out on things like S St., thinking it's "south street"
-    parts = DcAddressLookup.lookup address
-    return unless parts
-
-    self.street_number = parts.addrnum
-    self.street_name   = parts.stname
-    self.street_type   = parts.street_type.to_s.empty? ? "ST" : parts.street_type
-    self.quad          = parts.quadrant
-  end
-
-  def location
-    @location ||= DcAddressLookup.lookup address
+    location.address
   end
 
   def license_number
@@ -173,52 +124,5 @@ class Licensee < ActiveRecord::Base
     return if license_number.nil?
     matches = license_number.match(LICENSE_NUMBER_REGEX)
     self.license_id = matches[1] if matches
-  end
-
-  private
-
-  def ensure_lonlat
-    return unless lon.nil? && lat.nil?
-    self.lon = location.longitude
-    self.lat = location.latitude
-  end
-
-  def ensure_anc
-    return unless anc.nil?
-    self.anc = Anc.find_or_create_by! :name => location.anc
-  end
-
-  def normalize_street_name
-    return unless self.street_name
-
-    # If this is a plain numeric street number, e.g., "14", ordinalize it for consistency (e.g., "14th")
-    if self.street_name.to_i.to_s == self.street_name
-      self.street_name = ActiveSupport::Inflector.ordinalize self.street_name
-    end
-
-    # Strip trailing street types from street name
-    street_type_full = STREET_TYPES_ABV[self.street_type]
-    self.street_name = self.street_name.gsub(/\b(#{street_type_full})/i, "")
-
-    self.street_name = self.street_name.upcase
-  end
-
-  # Some street numbers are ranges. For simplicity, just use the first number in the range.
-  # This allows us to store the column as integers, rather than strings, and simplifies geolocation
-  # Oh, and did I mention they don't always use a standard hyphen?
-  def normalize_street_number
-    return unless self.street_number
-    self.street_number = self.street_number.to_s.to_i
-  end
-
-  def normalize_street_type
-    return unless self.street_type
-    self.street_type = self.street_type.downcase.gsub(STREET_TYPES_REGEX, STREET_TYPES.stringify_keys)
-    self.street_type = self.street_type.upcase.sub(/\W/, "")
-  end
-
-  def normalize_quad
-    return unless self.quad
-    self.quad = self.quad.upcase.gsub(".","")
   end
 end

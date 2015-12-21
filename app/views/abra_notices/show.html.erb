@@ -8,16 +8,8 @@
         <td><%= @abra_notice.posting_date %></td>
       </tr>
       <tr>
-        <th>Petition Date</th>
-        <td><%= @abra_notice.petition_date %></td>
-      </tr>
-      <tr>
         <th>Hearing Date</th>
         <td><%= @abra_notice.hearing_date %></td>
-      </tr>
-      <tr>
-        <th>Protest Date</th>
-        <td><%= @abra_notice.protest_date %></td>
       </tr>
       <tr>
         <th>Ward</th>
@@ -56,8 +48,8 @@
   <div class="col-md-6">
     <div id="map"
       data-geojson-url="<%= abra_notice_url(@abra_notice, :format => :geojson) %>"
-      data-lon="<%= @abra_notice.licensee.lon %>"
-      data-lat="<%= @abra_notice.licensee.lat %>"
+      data-lon="<%= @abra_notice.location.lng %>"
+      data-lat="<%= @abra_notice.location.lat %>"
     ></div>
     <div class="address">
       <%= @abra_notice.licensee.address %>

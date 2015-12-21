@@ -1,82 +1,31 @@
-class AbraNotice < ActiveRecord::Base
-
-  belongs_to :licensee
-  has_one :license_class_license_description, :through => :licensee, dependent: :destroy
-  has_one :license_class, :through => :license_class_license_description
-  has_one :license_description, :through => :license_class_license_description
-
-  has_one :anc, :through => :licensee
-  has_one :ward, :through => :anc
+class AbraNotice < Posting
 
   belongs_to :abra_bulletin
-  serialize  :details, JSON
+  belongs_to :licensee
+  has_one :license_class, through: :licensee
+  has_one :license_description, through: :licensee
 
-  acts_as_mappable :through => :licensee
-
-  alias_attribute :text, :body
   validates :pdf_page, numericality: { only_integer: true }
-  validates_presence_of :licensee_id, :details
+  validates_presence_of :licensee, :details
 
-  validates_inclusion_of :correction, :in => [true, false]
-  validates_inclusion_of :rescinded, :in => [true, false]
-
-  before_validation :ensure_body
+  before_validation :ensure_body, prepend: true
+  before_validation :ensure_licensee, prepend: true
   before_validation :ensure_dates
-  before_validation :ensure_licensee
+  before_validation :ensure_location
   before_validation :ensure_anc
-  before_validation :ensure_correction
   before_validation :ensure_rescinded
   before_validation :ensure_details
 
-  DATE_FIELDS = [:posting, :petition, :hearing, :protest]
-  DATE_FIELDS.each do |field|
-    validates :"#{field}_date", date:true, allow_nil: true
-  end
-
   DETAILS_REGEX = /^\**([A-Z]{2}[A-Z\s\/\(\)]+)\n(?![A-Za-z]+\s[A-Za-z]+\:\s)(\w.*?)(?=\n\n|\z)/m
   KEY_VALUE_REGEX = /^\s*\**([A-Z][^:\n]+):[ \t]*([^\n]+)$/
-
-  extend FriendlyId
-  friendly_id :name, use: [:slugged, :finders]
-
-  default_scope { where({ rescinded: false }) }
-  scope :rescinded, -> { where({ rescinded: true }) }
-  scope :correction, -> { where({ correction: true }) }
 
   def pdf_url
     URI.join(abra_bulletin.pdf_url, "#page=#{pdf_page}").to_s
   end
 
-  def to_geojson
-    {
-      :type => "Feature",
-      :properties => {
-        :name       => licensee.applicant,
-        :trade_name => licensee.trade_name,
-        :address    => licensee.address
-      },
-      :geometry => {
-        :type => "Point",
-        :coordinates => [
-          licensee.lon,
-          licensee.lat
-        ]
-      }
-    }
+  def to_s
+    name.compact.first
   end
-
-  scope :close_to, -> (latitude, longitude, distance_in_meters = 2000) {
-    where(%{
-      ST_DWithin(
-        ST_GeographyFromText(
-          'SRID=4326;POINT(' || cafes.longitude || ' ' || cafes.latitude || ')'
-        ),
-        ST_GeographyFromText('SRID=4326;POINT(%f %f)'),
-        %d
-      )
-    } % [longitude, latitude, distance_in_meters])
-  }
-
 
   private
 
@@ -88,7 +37,7 @@ class AbraNotice < ActiveRecord::Base
   end
 
   def ensure_dates
-    DATE_FIELDS.each do |field|
+    ["posting", "hearing"].each do |field|
       next unless self.send("#{field}_date").nil?
       write_attribute "#{field}_date".to_sym, key_values["#{field} date"]
     end
@@ -103,10 +52,12 @@ class AbraNotice < ActiveRecord::Base
     license_text = key_values["license class"] || key_values["class"]
     license_class_license_description = LicenseClassLicenseDescription.from_string license_text
 
+    location = Location.find_or_create_by_address! key_values["address"]
+
     licensee = Licensee.new({
       :applicant                         => key_values["licensee"],
       :trade_name                        => key_values["trade name"],
-      :address                           => key_values["address"],
+      :location                          => location,
       :license_number                    => license_number,
       :license_class_license_description => license_class_license_description,
       :status                            => "Pending"
@@ -118,6 +69,7 @@ class AbraNotice < ActiveRecord::Base
 
   def ensure_body
     return unless body.nil?
+    return if abra_bulletin.nil?
     self.body = abra_bulletin.pdf.pages[pdf_page - 1].text.squeeze("\s").strip
   end
 
@@ -157,20 +109,12 @@ class AbraNotice < ActiveRecord::Base
     end
   end
 
-  def name
-    [
-      licensee.trade_name,
-      licensee.applicant
-    ]
-  end
-
-  def ensure_correction
-    self.correction = !!(body =~ /CORRECTION/)
-    nil
-  end
-
   def ensure_rescinded
-    self.rescinded = !!(body =~ /RESCIND/)
-    nil
+    self.status = "rescinded" if body =~ /RESCIND/
+  end
+
+  def ensure_location
+    return unless location.nil?
+    self.location = licensee.location
   end
 end

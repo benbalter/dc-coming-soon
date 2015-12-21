@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  street_number: 1
+  street_name: MyString
+  street_type: MyString
+  quad: MyString
+  lat: 9.99
+  lng: 9.99
+  slug: MyString
+  anc_id: 
+
+two:
+  street_number: 1
+  street_name: MyString
+  street_type: MyString
+  quad: MyString
+  lat: 9.99
+  lng: 9.99
+  slug: MyString
+  anc_id: 
