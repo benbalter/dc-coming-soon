@@ -8,8 +8,8 @@ class AbraNotice < Posting
   validates :pdf_page, numericality: { only_integer: true }
   validates_presence_of :licensee, :details
 
-  before_validation :ensure_body, prepend: true
   before_validation :ensure_licensee, prepend: true
+  before_validation :ensure_body, prepend: true
   before_validation :ensure_dates
   before_validation :ensure_location
   before_validation :ensure_anc
