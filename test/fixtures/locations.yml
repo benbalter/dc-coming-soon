@@ -1,21 +1,21 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+white_house:
+  id: 1
+  street_number: 1600
+  street_name: "PENNSYLVANIA"
+  street_type: "AVE"
+  quad: "NW"
+  lat: 0.388977
+  lng: -0.770366
+  slug: "1600-pennsylvania-ave-nw"
+  anc_id: 1
 
-one:
-  street_number: 1
-  street_name: MyString
-  street_type: MyString
-  quad: MyString
-  lat: 9.99
-  lng: 9.99
-  slug: MyString
-  anc_id: 
-
-two:
-  street_number: 1
-  street_name: MyString
-  street_type: MyString
-  quad: MyString
-  lat: 9.99
-  lng: 9.99
-  slug: MyString
-  anc_id: 
+loc:
+  id: 2
+  street_number: 101
+  street_name: "INDEPENDENCE"
+  street_type: "AVE"
+  quad: "SE"
+  lat: 0.388886
+  lng: -0.770047
+  slug: "101-indepdence-ave-se"
+  anc_id: 1

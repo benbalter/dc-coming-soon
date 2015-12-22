@@ -1,14 +1,12 @@
 require 'test_helper'
 
 class WardControllerTest < ActionController::TestCase
-  test "should get index" do
-    get :index
-    assert_response :success
+  setup do
+    @ward = wards(:one)
   end
 
-  test "should get show" do
-    get :show
+  test "should show location" do
+    get :show, id: @ward
     assert_response :success
   end
-
 end

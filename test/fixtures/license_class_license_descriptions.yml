@@ -1,9 +1,9 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  license_class_id: 
-  license_description_id: 
+  id: 1
+  license_class_id: 1
+  license_description_id: 1
 
 two:
-  license_class_id: 
-  license_description_id: 
+  id: 2
+  license_class_id: 2
+  license_description_id: 2

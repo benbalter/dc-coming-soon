@@ -1,0 +1,5 @@
+language: ruby
+rvm: jruby
+cache: bundler
+sudo: false
+install: script/bootstrap

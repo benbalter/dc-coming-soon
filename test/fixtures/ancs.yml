@@ -1,9 +1,9 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+1A:
+  id: 1
+  name: 1A
+  ward_id: 1
 
-one:
-  name: MyString
-  ward_id: 
-
-two:
-  name: MyString
-  ward_id: 
+2A:
+  id: 2
+  name: 2A
+  ward_id: 2

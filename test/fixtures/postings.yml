@@ -1,31 +1,32 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  type: 
-  slug: MyString
-  posting_date: 2015-12-21
-  hearing_date: 2015-12-21
+abra_notice:
+  id: 1
+  slug: test
+  type: "AbraNotice"
+  posting_date: 2015-11-27
   pdf_page: 1
-  abra_bulletin_id: 
-  details: MyText
-  body: MyText
-  licensee_id: 
-  applicant: MyString
-  raw_address: MyString
-  number: 1
-  status: MyString
+  abra_bulletin_id: 1
+  details: '{"foo":"bar"}'
+  licensee_id: 1
+  location_id: 1
 
-two:
-  type: 
-  slug: MyString
-  posting_date: 2015-12-21
-  hearing_date: 2015-12-21
+zc:
+  id: 2
+  slug: test2
+  type: "ZoningCommissionCase"
+  posting_date: 2015-12-27
   pdf_page: 1
-  abra_bulletin_id: 
-  details: MyText
-  body: MyText
-  licensee_id: 
-  applicant: MyString
-  raw_address: MyString
-  number: 1
-  status: MyString
+  abra_bulletin_id: 2
+  details: '{"foo":"bar"}'
+  licensee_id: 2
+  location_id: 2
+
+bza:
+  id: 3
+  slug: test2
+  type: "BoardOfZoningAdjustmentCase"
+  posting_date: 2015-12-27
+  pdf_page: 2
+  abra_bulletin_id: 2
+  details: '{"foo":"bar"}'
+  licensee_id: 2
+  location_id: 2

@@ -1,9 +1,11 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  pdf_url: MyString
-  date: 2015-12-04
+  id: 1
+  pdf_url: http://abra.dc.gov/sites/default/files/dc/sites/abra/publication/attachments/ProtestNotices12182015.pdf
+  html_url: http://abra.dc.gov/publication/protest-notices-12-18-2015
+  date: 2015-12-18
 
 two:
-  pdf_url: MyString
-  date: 2015-12-04
+  id: 2
+  pdf_url: http://abra.dc.gov/sites/default/files/dc/sites/abra/publication/attachments/NPH.1.2.2015.pdf
+  html_url: http://abra.dc.gov/publication/protest-notices-1-2-2015
+  date: 2015-01-02

@@ -1,11 +1,19 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  name: MyString
-  trade_name: MyString
-  address: MyString
+  id: 1
+  applicant: "Test Licensee, Inc."
+  trade_name: "Test Licensee"
+  license_class_license_description_id: 1
+  status: "Active"
+  anc_id: 1
+  license_id: 1
+  location_id: 1
 
 two:
-  name: MyString
-  trade_name: MyString
-  address: MyString
+  id: 2
+  applicant: "Another Test Licensee, Inc."
+  trade_name: "Another Test Licensee"
+  license_class_license_description_id: 1
+  status: "Active"
+  anc_id: 2
+  license_id: 2
+  location_id: 2

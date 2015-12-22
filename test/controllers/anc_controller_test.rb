@@ -1,14 +1,12 @@
 require 'test_helper'
 
 class AncControllerTest < ActionController::TestCase
-  test "should get index" do
-    get :index
-    assert_response :success
+  setup do
+    @anc = ancs(:"1A")
   end
 
-  test "should get show" do
-    get :show
+  test "should get anc" do
+    get :show, id: @anc
     assert_response :success
   end
-
 end

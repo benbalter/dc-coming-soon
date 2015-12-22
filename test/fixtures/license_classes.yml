@@ -1,9 +1,7 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+A:
+  id: 1
+  letter: A
 
-one:
-  name: MyString
-  letter: MyString
-
-two:
-  name: MyString
-  letter: MyString
+B:
+  id: 2
+  letter: B
