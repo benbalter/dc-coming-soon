@@ -12,6 +12,11 @@ An app to answer the question "*what's going to be coming near me soon?*".
 1. JRuby
 2. [Poppler](http://poppler.freedesktop.org/)
 
+## Running locally
+
+1. `script/bootstrap`
+2. `script/server`
+
 ## Huh? Why are you using JRuby?
 
 Because [Tabular Extractor](https://github.com/tabulapdf/tabula-extractor) requires it.
