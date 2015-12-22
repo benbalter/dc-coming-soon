@@ -1,8 +1,10 @@
 language: ruby
 rvm: jruby
 cache: bundler
-sudo: false
+sudo: required
+
 install:
+  - sudo apt-get install poppler-utils
   - bundle install
   - npm install
 
