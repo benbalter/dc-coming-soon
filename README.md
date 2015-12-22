@@ -2,6 +2,8 @@
 
 An app to answer the question "*what's going to be coming near me soon?*".
 
+[![Build Status](https://travis-ci.org/benbalter/dc-coming-soon.svg?branch=master)](https://travis-ci.org/benbalter/dc-coming-soon)
+
 ## What it looks at
 
 * [ABRA Notices of Public Hearing](http://abra.dc.gov/page/notices-public-hearing)
