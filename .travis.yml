@@ -1,5 +1,4 @@
 language: ruby
-rvm: jruby
 cache: bundler
 sudo: required
 
