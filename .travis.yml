@@ -2,4 +2,14 @@ language: ruby
 rvm: jruby
 cache: bundler
 sudo: false
-install: script/bootstrap
+install:
+  - bundle install
+  - npm install
+
+services:
+  - postgresql
+  - memcached
+
+before_script:
+  - psql -c 'create database dc_coming_soon_test;' -U postgres
+  - bundle exec rake db:test:prepare
