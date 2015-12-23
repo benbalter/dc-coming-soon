@@ -89,14 +89,12 @@ class Licensee < ActiveRecord::Base
         })
       })
 
-      location = Location.new({
-        :street_number                     => attributes[:street_number],
-        :street_name                       => attributes[:street_name],
-        :street_type                       => attributes[:type],
-        :quad                              => attributes[:quad]
+      location = Location.find_or_create_by_address!({
+        :number => attributes[:street_number],
+        :street_name => attributes[:street_name],
+        :street_type => attributes[:type],
+        :quadrant => attributes[:quad]
       })
-      location.normalize
-      location = Location.find_or_create_by! location.attributes.reject { |k,v| v.nil? }
 
       licensee = Licensee.new({
         :applicant                         => attributes[:applicant],

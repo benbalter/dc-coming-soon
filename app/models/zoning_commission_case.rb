@@ -30,7 +30,7 @@ class ZoningCommissionCase < ZoningCase
     cases.map do |zoning_case|
       begin
         ZoningCommissionCase.find_or_create_by! zoning_case
-      rescue ZoningCase::InvalidCase, Location::InvalidAddress
+      rescue ZoningCase::InvalidCase, Location::InvalidAddress, DcAddressParser::Address::InvalidAddress
         Rails.logger.error "Failed to load ZC Case #{zoning_case[:number]}"
       end
     end

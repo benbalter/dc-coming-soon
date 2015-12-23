@@ -33,6 +33,7 @@ gem 'tabula-extractor', "~> 0.8", platform: :jruby, require: "tabula"
 gem 'dalli', "~> 2.7"
 gem 'dc_address_lookup', github: "benbalter/dc-address-lookup"
 gem 'pdftotext', github: "benbalter/pdftotext"
+gem 'dc_address_parser', github: "benbalter/dc-address-parser"
 gem 'actionpack-action_caching', "~> 1.1"
 gem 'mechanize', "~> 2.7"
 

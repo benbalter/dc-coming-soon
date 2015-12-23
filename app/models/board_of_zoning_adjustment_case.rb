@@ -34,7 +34,7 @@ class BoardOfZoningAdjustmentCase < ZoningCase
       if bza_case.exists?
         begin
           bza_case.save!
-        rescue ZoningCase::InvalidCase, Location::InvalidAddress
+        rescue ZoningCase::InvalidCase, Location::InvalidAddress, DcAddressParser::Address::InvalidAddress
           Rails.logger.error "Failed to load BZA Case #{bza_case.number}"
         end
         misses = 0

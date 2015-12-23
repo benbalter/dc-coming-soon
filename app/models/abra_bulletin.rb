@@ -61,7 +61,7 @@ class AbraBulletin < ActiveRecord::Base
       next if page.text.to_s.empty?
       begin
         AbraNotice.find_or_create_by! :abra_bulletin => self, :pdf_page => page.number
-      rescue ZoningCase::InvalidCase, Location::InvalidAddress
+      rescue ZoningCase::InvalidCase, Location::InvalidAddress, DcAddressParser::Address::InvalidAddress
         Rails.logger.error "Failed to load ABRA Notice from #{pdf} page #{page.number}"
       end
     end
