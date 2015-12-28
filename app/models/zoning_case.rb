@@ -79,6 +79,8 @@ class ZoningCase < Posting
 
   def ensure_applicant
     return unless self.applicant.nil? || self.applicant.empty?
-    self.applicant = key_value_pairs["Applicant/Case Name"] || self.address
+    applicant = key_value_pairs["Applicant/Case Name"] || self.address
+    raise InvalidCase if applicant.empty?
+    self.applicant = applicant
   end
 end
