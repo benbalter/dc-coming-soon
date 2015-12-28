@@ -59,7 +59,6 @@ class ZoningCase < Posting
   end
 
   def ensure_meta
-    self.applicant = key_value_pairs["Applicant/Case Name"]
     self.status    = key_value_pairs["Case Status"]
     self.body      = key_value_pairs["Case Description"]
   end
@@ -80,6 +79,6 @@ class ZoningCase < Posting
 
   def ensure_applicant
     return unless self.applicant.nil? || self.applicant.empty?
-    self.applicant = self.address
+    self.applicant = key_value_pairs["Applicant/Case Name"] || self.address
   end
 end
