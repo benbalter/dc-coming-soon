@@ -22,12 +22,6 @@ GIT
     pdftotext (0.2.0)
       cliver (~> 0.3)
 
-GIT
-  remote: git://github.com/headius/jruby-pg.git
-  revision: 5f9cd2ac34e092d9f03970ff24a76936063ff9d8
-  specs:
-    pg (0.17.1)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -155,6 +149,7 @@ GEM
       mini_portile2 (~> 2.0.0.rc2)
     nokogiri (1.6.7.1-java)
     ntlm-http (0.1.1)
+    pg (0.18.4)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -284,7 +279,7 @@ DEPENDENCIES
   mechanize (~> 2.7)
   nokogiri (~> 1.6)
   pdftotext!
-  pg (= 0.17.1)!
+  pg
   pry (~> 0.10)
   puma (~> 2.15)
   rails (~> 4.2)

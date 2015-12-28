@@ -1,10 +1,11 @@
 source 'http://rubygems.org'
 
-if `cat .ruby-version` =~ /jruby/i
+ruby_version = `cat .ruby-version`.strip
+if ruby_version =~ /jruby/i
   ruby '2.2.2', engine: 'jruby', engine_version: '9.0.4.0'
   gem 'pg', '0.17.1', :platform => :jruby, :github => 'headius/jruby-pg'
 else
-  ruby '2.2.4'
+  ruby ruby_version
   gem 'pg'
 end
 
