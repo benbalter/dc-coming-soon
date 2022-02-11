@@ -17,7 +17,7 @@ gem 'coffee-rails', '~> 4.1'
 gem 'jquery-rails', "~> 4.0"
 gem 'turbolinks', "~> 2.5"
 gem 'jbuilder', '~> 2.0'
-gem 'puma', "~> 2.15"
+gem 'puma', "~> 5.6"
 gem 'date_validator', "~> 0.8"
 gem 'validate_url', "~> 1.0"
 gem 'typhoeus', "~> 0.8"
