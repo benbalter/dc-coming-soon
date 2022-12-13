@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/benbalter/dc-address-lookup.git
+  remote: https://github.com/benbalter/dc-address-lookup.git
   revision: 4d53fe110dbe9e25d272bc4df3ac456a722923ce
   specs:
     dc_address_lookup (0.2.2)
@@ -8,7 +8,7 @@ GIT
       rest-client-components (~> 1.4)
 
 GIT
-  remote: git://github.com/benbalter/dc-address-parser.git
+  remote: https://github.com/benbalter/dc-address-parser.git
   revision: cf03aa2b8532b12deb1b96f64cf77bf4b80ab8e3
   specs:
     dc_address_parser (0.1.2)
@@ -16,10 +16,10 @@ GIT
       dc_address_lookup (~> 0.2)
 
 GIT
-  remote: git://github.com/benbalter/pdftotext.git
-  revision: ff516a5c0ec05191df81909d693f233b497ba80b
+  remote: https://github.com/benbalter/pdftotext.git
+  revision: 013bbddb9a05f25b9f24bd3c5cdf1ac53dd4c257
   specs:
-    pdftotext (0.2.0)
+    pdftotext (0.2.1)
       cliver (~> 0.3)
 
 GEM
@@ -88,6 +88,7 @@ GEM
     connection_pool (2.2.0)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    crass (1.0.6)
     dalli (2.7.5)
     date_validator (0.8.1)
       activemodel
@@ -124,7 +125,8 @@ GEM
       thor (>= 0.14, < 2.0)
     json (1.8.3)
     json (1.8.3-java)
-    loofah (2.0.3)
+    loofah (2.19.1)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
@@ -162,7 +164,7 @@ GEM
     puma (2.15.3)
     puma (2.15.3-java)
     rack (1.6.4)
-    rack-cache (1.5.1)
+    rack-cache (1.13.0)
       rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -183,8 +185,8 @@ GEM
       activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
-    rails-html-sanitizer (1.0.2)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.4.4)
+      loofah (~> 2.19, >= 2.19.1)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -200,7 +202,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rest-client-components (1.4.0)
+    rest-client-components (1.5.0)
       rack (>= 1.0.1)
       rest-client (>= 1.6.0)
     rgeo (0.5.2)
